@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchProducts } from "../lib/shopify";
+import { useScrollTriggerRefresh } from "../hooks/useScrollTriggerRefresh";
 import Link from "next/link";
 
 type Product = {
@@ -23,9 +24,23 @@ function formatEuroPrice(amount: string) {
   );
 }
 
+// Skeleton component for consistent sizing
+function ProductSkeleton() {
+  return (
+    <div className="block min-h-[350px] animate-pulse rounded-sm">
+      <div className="mb-2 h-[250px] w-full rounded bg-gray-200"></div>
+      <div className="mb-2 h-5 w-3/4 rounded bg-gray-200"></div>
+      <div className="h-4 w-1/2 rounded bg-gray-200"></div>
+    </div>
+  );
+}
+
 export default function LatestProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Refresh ScrollTrigger when loading state changes
+  useScrollTriggerRefresh([loading, products.length]);
 
   useEffect(() => {
     console.log("LatestProducts: Starting to fetch products...");
@@ -41,37 +56,45 @@ export default function LatestProducts() {
         setLoading(false);
       });
   }, []);
+
   return (
     <section className="px-4 py-8 md:px-8">
-      <h2 className="mb-4 text-2xl font-bold">Latest Products</h2>
-      {loading && <div className="py-4 text-center">Loading products...</div>}
-      {!loading && products.length === 0 && (
-        <div className="py-4 text-center">
-          No products found. Check console for details.
-        </div>
-      )}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {products.map((p) => (
-          <Link
-            key={p.id}
-            href={`/product/${p.handle}`}
-            className="block min-h-[350px] rounded-sm"
-          >
-            <img
-              src={p.images.edges[0]?.node.url}
-              alt={p.title}
-              className="mb-2 h-100 w-full rounded object-cover"
-            />
-            <div className="font-neue-montreal-mono text-lg tracking-wide uppercase">
-              {p.title}
-            </div>
-            <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
-              {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
-            </div>
-            {/* If you have a description, render it here: */}
-            {/* <div className="font-neue-montreal text-gray-600 text-sm">{p.description}</div> */}
-          </Link>
-        ))}
+      <h2 className="font-neue-montreal mb-4 text-2xl">Latest Products</h2>
+
+      {/* Always show the grid with consistent height */}
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {loading ? (
+          // Show 4 skeleton items with exact same dimensions
+          Array.from({ length: 4 }).map((_, index) => (
+            <ProductSkeleton key={`skeleton-${index}`} />
+          ))
+        ) : products.length > 0 ? (
+          // Show actual products with same dimensions
+          products.map((p) => (
+            <Link
+              key={p.id}
+              href={`/product/${p.handle}`}
+              className="block min-h-[350px] rounded-sm"
+            >
+              <img
+                src={p.images.edges[0]?.node.url}
+                alt={p.title}
+                className="mb-2 h-[250px] w-full rounded object-cover"
+              />
+              <div className="font-neue-montreal-mono text-lg tracking-wide uppercase">
+                {p.title}
+              </div>
+              <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+                {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
+              </div>
+            </Link>
+          ))
+        ) : (
+          // Error state with same height
+          <div className="col-span-full flex min-h-[350px] items-center justify-center py-4 text-center">
+            No products found. Check console for details.
+          </div>
+        )}
       </div>
     </section>
   );

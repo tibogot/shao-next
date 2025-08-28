@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import LatestProducts from "../components/LatestProducts";
+import FAQ from "@/components/FAQ";
 
 export default function Home() {
   return (
-    <main className="bg-amber-400">
+    <main className="bg-[#FBFBFB]">
       <div className="hero relative flex h-svh w-full items-center justify-center overflow-visible bg-purple-200 px-4 py-8 md:px-8">
         {/* Logo Container */}
         <div className="relative flex items-center justify-center">
@@ -38,10 +39,10 @@ export default function Home() {
         </div> */}
       </div>
       <section className="px-4 py-16 md:px-8">
-        <h2 className="font-neue-montreal-mono uppercase">
+        <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
           Rooted in Nature, Born to Glow
         </h2>
-        <p className="font-neue-montreal mt-4 max-w-2xl text-xl">
+        <p className="font-neue-montreal mt-8 max-w-xl text-xl">
           SHAO celebrates the power of nature's purest ingredients. We blend
           traditional botanical wisdom with cutting-edge sustainable practices
           to create cosmetics that honor both your skin and our planet. Every
@@ -51,20 +52,39 @@ export default function Home() {
       <LatestProducts />
       <section className="flex px-4 py-16 md:px-8">
         <div className="left w-1/2">
-          <h2 className="font-neue-montreal-mono uppercase">
-            Rooted in Nature, Born to Glow
+          <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
+            Sustainability Promise
           </h2>
-          <p className="font-neue-montreal mt-4 max-w-2xl text-xl">
-            SHAO celebrates the power of nature's purest ingredients. We blend
-            traditional botanical wisdom with cutting-edge sustainable practices
-            to create cosmetics that honor both your skin and our planet. Every
-            product tells a story of heritage, purity, and conscious beauty.
-          </p>{" "}
+          <p className="font-neue-montreal mt-8 max-w-xl text-xl">
+            Advanced formulas for slow rituals, REOME's elevated skincare is
+            powered by biotechnology and bio-fermentation, with one singular
+            intention: to heal and restore skin.
+          </p>
         </div>
         <div className="right w-1/2">
           <img src="/hero.webp" alt="Future skincare" />
         </div>
       </section>
+      <section className="relative flex h-svh items-end px-4 py-16 md:px-8">
+        <div className="relative z-10 text-white">
+          <h2 className="font-neue-montreal-mono text-sm text-white/70 uppercase">
+            Active Recovery
+          </h2>
+          <p className="font-neue-montreal mt-8 max-w-xl text-xl">
+            Advanced formulas for slow rituals, REOME's elevated skincare is
+            powered by biotechnology and bio-fermentation, with one singular
+            intention: to heal and restore skin.
+          </p>
+        </div>
+        <Image
+          src="/hero.webp"
+          alt="Future skincare"
+          width={1000}
+          height={1000}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </section>
+      <FAQ />
     </main>
   );
 }

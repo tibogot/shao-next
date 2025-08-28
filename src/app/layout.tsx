@@ -4,17 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import CartDrawer from "../components/CartDrawer";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import LenisProvider from "../components/LenisProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const neueMontreal = localFont({
   src: [
@@ -51,15 +42,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} ${neueMontreal.variable} ${neueMontrealMono.variable} antialiased`}
+        className={` ${neueMontreal.variable} ${neueMontrealMono.variable} antialiased`}
       >
         <LenisProvider>
           <CartDrawer />
           <Navbar />
           {children}
+          <Footer />
         </LenisProvider>
       </body>
     </html>
