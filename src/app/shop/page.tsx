@@ -8,7 +8,7 @@ export default function ShopPage() {
   const [maxPrice, setMaxPrice] = useState("");
 
   return (
-    <div className="mx-auto bg-green-200 px-4 py-8">
+    <div className="mx-auto px-4 py-8">
       <h1 className="mb-6 text-3xl font-bold">Shop</h1>
       <div className="mb-6 flex flex-wrap items-end gap-4 px-4">
         <div>

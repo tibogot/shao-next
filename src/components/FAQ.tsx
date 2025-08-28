@@ -69,10 +69,10 @@ export default function FAQ() {
 
   return (
     <section className="bg-[#FBFBFB] px-4 py-16 md:px-8">
-      <div className="mx-auto max-w-4xl">
+      <div>
         {/* Header */}
         <motion.div
-          className="mb-12 text-center"
+          className="mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -81,7 +81,7 @@ export default function FAQ() {
           <h2 className="font-neue-montreal-mono mb-4 text-sm tracking-wider text-black/60 uppercase">
             Frequently Asked Questions
           </h2>
-          <p className="font-neue-montreal mx-auto max-w-2xl text-xl text-black/80">
+          <p className="font-neue-montreal max-w-2xl text-xl text-black/80">
             Everything you need to know about SHAO's natural skincare and our
             commitment to conscious beauty.
           </p>
@@ -191,7 +191,7 @@ export default function FAQ() {
 
         {/* Contact CTA */}
         <motion.div
-          className="mt-12 text-center"
+          className="mt-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
