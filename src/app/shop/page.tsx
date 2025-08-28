@@ -34,6 +34,7 @@ export default function ShopPage() {
     endCursor: string | null;
   }>({ hasNextPage: false, endCursor: null });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   const pageSize = 12;
@@ -41,11 +42,21 @@ export default function ShopPage() {
   // Fetch initial products
   useEffect(() => {
     setLoading(true);
-    fetchAllProducts(pageSize).then((data) => {
-      setProducts(data.edges.map((e: any) => e.node));
-      setPageInfo(data.pageInfo);
-      setLoading(false);
-    });
+    fetchAllProducts(pageSize)
+      .then((data) => {
+        if (data.edges.length === 0 && !data.pageInfo.hasNextPage) {
+          setError(
+            "Shopify store not configured. Please check environment variables.",
+          );
+        }
+        setProducts(data.edges.map((e: any) => e.node));
+        setPageInfo(data.pageInfo);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load products. Please try again later.");
+        setLoading(false);
+      });
   }, []);
 
   // Filtering

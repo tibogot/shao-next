@@ -1,12 +1,27 @@
 import { createStorefrontApiClient } from "@shopify/storefront-api-client";
 
-const client = createStorefrontApiClient({
-  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!,
-  publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
-  apiVersion: "2024-10",
-});
+// Check if environment variables are available
+const storeDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const accessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+
+let client: any = null;
+
+if (storeDomain && accessToken) {
+  client = createStorefrontApiClient({
+    storeDomain,
+    publicAccessToken: accessToken,
+    apiVersion: "2024-10",
+  });
+}
 
 export async function fetchProducts(limit = 4) {
+  if (!client) {
+    console.warn(
+      "Shopify client not configured - missing environment variables",
+    );
+    return [];
+  }
+
   const query = `
     {
       products(first: ${limit}) {
@@ -22,11 +37,24 @@ export async function fetchProducts(limit = 4) {
       }
     }
   `;
-  const { data } = await client.request(query);
-  return data.products.edges.map((edge: any) => edge.node);
+
+  try {
+    const { data } = await client.request(query);
+    return data.products.edges.map((edge: any) => edge.node);
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return [];
+  }
 }
 
 export async function fetchAllProducts(pageSize = 12, cursor?: string) {
+  if (!client) {
+    console.warn(
+      "Shopify client not configured - missing environment variables",
+    );
+    return { edges: [], pageInfo: { hasNextPage: false, endCursor: null } };
+  }
+
   const query = `
     {
       products(first: ${pageSize}${cursor ? `, after: \"${cursor}\"` : ""}) {
@@ -43,11 +71,24 @@ export async function fetchAllProducts(pageSize = 12, cursor?: string) {
       }
     }
   `;
-  const { data } = await client.request(query);
-  return data.products;
+
+  try {
+    const { data } = await client.request(query);
+    return data.products;
+  } catch (error) {
+    console.error("Failed to fetch all products:", error);
+    return { edges: [], pageInfo: { hasNextPage: false, endCursor: null } };
+  }
 }
 
 export async function fetchProductByHandle(handle: string) {
+  if (!client) {
+    console.warn(
+      "Shopify client not configured - missing environment variables",
+    );
+    return null;
+  }
+
   const query = `
     {
       product(handle: \"${handle}\") {
@@ -59,6 +100,12 @@ export async function fetchProductByHandle(handle: string) {
       }
     }
   `;
-  const { data } = await client.request(query);
-  return data.product;
+
+  try {
+    const { data } = await client.request(query);
+    return data.product;
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    return null;
+  }
 }
