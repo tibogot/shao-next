@@ -25,12 +25,31 @@ function formatEuroPrice(amount: string) {
 
 export default function LatestProducts() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    fetchProducts(4).then(setProducts);
+    console.log("LatestProducts: Starting to fetch products...");
+    setLoading(true);
+    fetchProducts(4)
+      .then((data) => {
+        console.log("LatestProducts: Received data:", data);
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("LatestProducts: Error fetching products:", error);
+        setLoading(false);
+      });
   }, []);
   return (
     <section className="bg-green-300 px-4 py-8 md:px-8">
       <h2 className="mb-4 text-2xl font-bold">Latest Products</h2>
+      {loading && <div className="py-4 text-center">Loading products...</div>}
+      {!loading && products.length === 0 && (
+        <div className="py-4 text-center">
+          No products found. Check console for details.
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {products.map((p) => (
           <Link

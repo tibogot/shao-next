@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import LatestProducts from "../components/LatestProducts";
 
 export default function Home() {
   return (
@@ -36,6 +37,7 @@ export default function Home() {
           <button className="btn-primary mt-8"> Shop now </button>
         </div> */}
       </div>
+      <LatestProducts />
       <section className="h-svh bg-blue-500">
         <div className="conta">
           <h2 className="text-2xl font-medium">Future skincare</h2>
