@@ -69,7 +69,7 @@ export default function Home() {
           <img
             src="/side1.webp"
             alt="Future skincare"
-            className="w-full object-cover"
+            className="h-[650px] w-full object-cover"
           />
         </div>
       </section>
