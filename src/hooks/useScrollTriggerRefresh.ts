@@ -10,7 +10,7 @@ export function useScrollTriggerRefresh(dependencies: any[] = []) {
     if (typeof window !== "undefined" && window.gsap?.ScrollTrigger) {
       // Small delay to ensure DOM is updated
       setTimeout(() => {
-        window.gsap.ScrollTrigger.refresh();
+        window.gsap?.ScrollTrigger?.refresh();
       }, 100);
     }
   }, dependencies);
@@ -19,6 +19,6 @@ export function useScrollTriggerRefresh(dependencies: any[] = []) {
 // Alternative: Manual refresh function you can call anytime
 export function refreshScrollTrigger() {
   if (typeof window !== "undefined" && window.gsap?.ScrollTrigger) {
-    window.gsap.ScrollTrigger.refresh();
+    window.gsap?.ScrollTrigger?.refresh();
   }
 }
