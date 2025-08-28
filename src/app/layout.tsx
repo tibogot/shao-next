@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import CartDrawer from "../components/CartDrawer";
+import Navbar from "../components/Navbar";
+import LenisProvider from "../components/LenisProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,6 +14,30 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const neueMontreal = localFont({
+  src: [
+    {
+      path: "../fonts/PP Neue Montreal-Variable.ttf",
+      style: "normal",
+      weight: "100 900",
+    },
+  ],
+  variable: "--font-neue-montreal",
+  display: "swap",
+});
+
+const neueMontrealMono = localFont({
+  src: [
+    {
+      path: "../fonts/PPNeueMontrealMono-Book.otf",
+      style: "normal",
+      weight: "400",
+    },
+  ],
+  variable: "--font-neue-montreal-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +53,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} ${neueMontreal.variable} ${neueMontrealMono.variable} antialiased`}
       >
-        {children}
+        <LenisProvider>
+          <CartDrawer />
+          <Navbar />
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );
