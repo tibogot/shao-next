@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchProducts } from "../lib/shopify";
+import { fetchProductsByVendor } from "../lib/shopify";
 import { useScrollTriggerRefresh } from "../hooks/useScrollTriggerRefresh";
 import Link from "next/link";
 
@@ -39,7 +39,7 @@ function ProductSkeleton() {
   );
 }
 
-export default function LatestProducts() {
+export default function HydrogenProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,16 +47,16 @@ export default function LatestProducts() {
   useScrollTriggerRefresh([loading, products.length]);
 
   useEffect(() => {
-    console.log("LatestProducts: Starting to fetch products...");
+    console.log("HydrogenProducts: Starting to fetch products...");
     setLoading(true);
-    fetchProducts(4)
+    fetchProductsByVendor("Hydrogen Vendor", 4)
       .then((data) => {
-        console.log("LatestProducts: Received data:", data);
+        console.log("HydrogenProducts: Received data:", data);
         setProducts(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("LatestProducts: Error fetching products:", error);
+        console.error("HydrogenProducts: Error fetching products:", error);
         setLoading(false);
       });
   }, []);
@@ -64,7 +64,7 @@ export default function LatestProducts() {
   return (
     <section className="px-4 py-8 md:px-8">
       <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
-        Latest Products
+        Hydrogen Collection
       </h2>
 
       {/* Always show the grid with consistent height */}
@@ -90,7 +90,7 @@ export default function LatestProducts() {
               <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
                 {p.title}
               </div>
-              <div className="mb-2 line-clamp-3 text-sm text-gray-600">
+              <div className="mt-4 line-clamp-3 text-lg text-gray-600">
                 {p.description}
               </div>
               <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
@@ -101,7 +101,7 @@ export default function LatestProducts() {
         ) : (
           // Error state with same height
           <div className="col-span-full flex min-h-[450px] items-center justify-center py-4 text-center">
-            No products found. Check console for details.
+            No Hydrogen products found. Check console for details.
           </div>
         )}
       </div>

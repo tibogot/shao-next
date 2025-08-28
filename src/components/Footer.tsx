@@ -15,7 +15,7 @@ export default function Footer() {
               <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
                 SHOP
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 <li>
                   <a
                     href="/products"
@@ -56,7 +56,7 @@ export default function Footer() {
               <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
                 LEARN
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 <li>
                   <a
                     href="/shop"
@@ -97,7 +97,7 @@ export default function Footer() {
               <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
                 SOCIAL MEDIA
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 <li>
                   <a
                     href="https://tiktok.com"

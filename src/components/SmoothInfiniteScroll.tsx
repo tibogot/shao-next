@@ -8,6 +8,9 @@ interface Product {
   id: string;
   title: string;
   handle: string;
+  description: string;
+  vendor: string;
+  availableForSale: boolean;
   images: { edges: { node: { url: string } }[] };
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
 }
@@ -27,12 +30,11 @@ function formatEuroPrice(amount: string) {
 // Enhanced Product Skeleton with smooth animation
 function ProductSkeleton({ delay = 0 }: { delay?: number }) {
   return (
-    <div className="block min-h-[350px] animate-pulse rounded-lg border bg-white">
-      <div className="mb-2 h-80 w-full rounded bg-gray-200"></div>
-      <div className="px-3 pb-3">
-        <div className="mb-2 h-6 w-3/4 rounded bg-gray-200"></div>
-        <div className="h-4 w-1/2 rounded bg-gray-200"></div>
-      </div>
+    <div className="block min-h-[450px] animate-pulse rounded-sm">
+      <div className="mb-2 h-[450px] w-full rounded bg-gray-200"></div>
+      <div className="mt-8 mb-2 h-5 w-3/4 rounded bg-gray-200"></div>
+      <div className="mb-2 h-4 w-full rounded bg-gray-200"></div>
+      <div className="h-4 w-1/2 rounded bg-gray-200"></div>
     </div>
   );
 }
@@ -48,21 +50,22 @@ function ProductCard({
   return (
     <Link
       href={`/product/${product.handle}`}
-      className="block min-h-[350px] rounded-lg border bg-white transition-all duration-300 hover:shadow-lg"
+      className="block min-h-[450px] rounded-sm"
     >
       <img
         src={product.images.edges[0]?.node.url}
         alt={product.title}
-        className="mb-2 h-80 w-full rounded object-cover"
+        className="mb-2 h-[450px] w-full rounded object-cover"
         loading="lazy"
       />
-      <div className="px-3 pb-3">
-        <div className="font-neue-montreal-mono text-lg font-bold tracking-wide uppercase">
-          {product.title}
-        </div>
-        <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
-          {formatEuroPrice(product.priceRange.minVariantPrice.amount)}
-        </div>
+      <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+        {product.title}
+      </div>
+      <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+        {product.description}
+      </div>
+      <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+        {formatEuroPrice(product.priceRange.minVariantPrice.amount)}
       </div>
     </Link>
   );
@@ -72,12 +75,18 @@ interface SmoothInfiniteScrollProps {
   search: string;
   minPrice: string;
   maxPrice: string;
+  vendor: string;
+  availability: string;
+  sortBy: string;
 }
 
 export default function SmoothInfiniteScroll({
   search,
   minPrice,
   maxPrice,
+  vendor,
+  availability,
+  sortBy,
 }: SmoothInfiniteScrollProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [filtered, setFiltered] = useState<Product[]>([]);
@@ -147,11 +156,17 @@ export default function SmoothInfiniteScroll({
   // Filtering with smooth transitions
   useEffect(() => {
     let filteredList = products;
+
+    // Search filter
     if (search) {
-      filteredList = filteredList.filter((p) =>
-        p.title.toLowerCase().includes(search.toLowerCase()),
+      filteredList = filteredList.filter(
+        (p) =>
+          p.title.toLowerCase().includes(search.toLowerCase()) ||
+          p.description.toLowerCase().includes(search.toLowerCase()),
       );
     }
+
+    // Price filters
     if (minPrice) {
       filteredList = filteredList.filter(
         (p) =>
@@ -166,9 +181,43 @@ export default function SmoothInfiniteScroll({
           parseFloat(maxPrice),
       );
     }
+
+    // Vendor filter
+    if (vendor && vendor !== "all") {
+      filteredList = filteredList.filter(
+        (p) => p.vendor.toLowerCase() === vendor.toLowerCase(),
+      );
+    }
+
+    // Availability filter
+    if (availability === "available") {
+      filteredList = filteredList.filter((p) => p.availableForSale);
+    } else if (availability === "unavailable") {
+      filteredList = filteredList.filter((p) => !p.availableForSale);
+    }
+
+    // Sorting
+    if (sortBy === "price-low-high") {
+      filteredList.sort(
+        (a, b) =>
+          parseFloat(a.priceRange.minVariantPrice.amount) -
+          parseFloat(b.priceRange.minVariantPrice.amount),
+      );
+    } else if (sortBy === "price-high-low") {
+      filteredList.sort(
+        (a, b) =>
+          parseFloat(b.priceRange.minVariantPrice.amount) -
+          parseFloat(a.priceRange.minVariantPrice.amount),
+      );
+    } else if (sortBy === "name-a-z") {
+      filteredList.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === "name-z-a") {
+      filteredList.sort((a, b) => b.title.localeCompare(a.title));
+    }
+
     setFiltered(filteredList);
     setVisibleCount(Math.min(12, filteredList.length)); // Reset visible count
-  }, [search, minPrice, maxPrice, products]);
+  }, [search, minPrice, maxPrice, vendor, availability, sortBy, products]);
 
   // Smooth reveal of more items
   const revealMore = useCallback(() => {
@@ -220,7 +269,7 @@ export default function SmoothInfiniteScroll({
 
   if (error) {
     return (
-      <div className="col-span-full flex min-h-[350px] items-center justify-center py-4 text-center">
+      <div className="col-span-full flex min-h-[450px] items-center justify-center py-4 text-center">
         <div>
           <p className="mb-4 text-red-600">{error}</p>
           <button

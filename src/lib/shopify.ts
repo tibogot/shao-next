@@ -30,6 +30,9 @@ export async function fetchProducts(limit = 4) {
             id
             title
             handle
+            description
+            vendor
+            availableForSale
             images(first: 1) { edges { node { url } } }
             priceRange { minVariantPrice { amount currencyCode } }
           }
@@ -64,6 +67,9 @@ export async function fetchAllProducts(pageSize = 12, cursor?: string) {
             id
             title
             handle
+            description
+            vendor
+            availableForSale
             images(first: 1) { edges { node { url } } }
             priceRange { minVariantPrice { amount currencyCode } }
           }
@@ -78,6 +84,42 @@ export async function fetchAllProducts(pageSize = 12, cursor?: string) {
   } catch (error) {
     console.error("Failed to fetch all products:", error);
     return { edges: [], pageInfo: { hasNextPage: false, endCursor: null } };
+  }
+}
+
+export async function fetchProductsByVendor(vendor: string, limit = 4) {
+  if (!client) {
+    console.warn(
+      "Shopify client not configured - missing environment variables",
+    );
+    return [];
+  }
+
+  const query = `
+    {
+      products(first: ${limit}, query: "vendor:${vendor}") {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            vendor
+            availableForSale
+            images(first: 1) { edges { node { url } } }
+            priceRange { minVariantPrice { amount currencyCode } }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await client.request(query);
+    return data.products.edges.map((edge: any) => edge.node);
+  } catch (error) {
+    console.error("Failed to fetch products by vendor:", error);
+    return [];
   }
 }
 

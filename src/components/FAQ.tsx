@@ -81,16 +81,16 @@ export default function FAQ() {
           <h2 className="font-neue-montreal-mono mb-4 text-sm tracking-wider text-black/60 uppercase">
             Frequently Asked Questions
           </h2>
-          <p className="font-neue-montreal max-w-2xl text-xl text-black/80">
+          {/* <p className="font-neue-montreal max-w-2xl text-xl text-black">
             Everything you need to know about SHAO's natural skincare and our
             commitment to conscious beauty.
-          </p>
+          </p> */}
         </motion.div>
 
         {/* FAQ Items with Layout Group for coordinated animations */}
         <LayoutGroup>
           <motion.div
-            className="space-y-4"
+            className="space-y-0"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -102,7 +102,7 @@ export default function FAQ() {
                 <motion.div
                   key={item.id}
                   layout
-                  className="overflow-hidden rounded-lg border border-black/10 bg-white hover:border-black/20"
+                  className="border-b border-black/10"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
@@ -111,16 +111,12 @@ export default function FAQ() {
                     delay: index * 0.1,
                     ease: "easeOut",
                   }}
-                  whileHover={{
-                    scale: 1.005,
-                    transition: { duration: 0.2 },
-                  }}
                 >
                   <motion.button
                     onClick={() => toggleItem(item.id)}
-                    className="flex w-full cursor-pointer items-center justify-between p-6 text-left"
+                    className="flex w-full cursor-pointer items-center justify-between py-6 text-left"
                     aria-expanded={isOpen}
-                    whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+                    whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.02)" }}
                     transition={{ duration: 0.2 }}
                   >
                     <h3 className="font-neue-montreal pr-4 text-lg font-medium text-black">
@@ -170,13 +166,13 @@ export default function FAQ() {
                         className="overflow-hidden"
                       >
                         <motion.div
-                          className="px-6 pb-6"
+                          className="pb-6"
                           initial={{ y: -10 }}
                           animate={{ y: 0 }}
                           exit={{ y: -10 }}
                           transition={{ duration: 0.3, ease: "easeOut" }}
                         >
-                          <p className="font-neue-montreal leading-relaxed text-black/70">
+                          <p className="font-neue-montreal max-w-4xl text-lg leading-relaxed text-black/70">
                             {item.answer}
                           </p>
                         </motion.div>

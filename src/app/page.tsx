@@ -2,20 +2,22 @@
 
 import Image from "next/image";
 import LatestProducts from "../components/LatestProducts";
+import HydrogenProducts from "../components/HydrogenProducts";
 import FAQ from "@/components/FAQ";
+import Press from "@/components/Press";
 
 export default function Home() {
   return (
     <main className="bg-[#FBFBFB]">
-      <div className="hero relative flex h-svh w-full items-center justify-center overflow-visible bg-purple-200 px-4 py-16 md:px-8 md:py-8">
+      <div className="hero relative flex h-svh w-full items-end overflow-visible bg-purple-200 px-4 py-16 md:px-8 md:py-8">
         {/* Logo Container */}
-        <div className="relative flex items-center justify-center">
+        {/* <div className="relative flex items-center justify-center">
           <img
             src="/logo.svg"
             alt="Logo"
             className="h-auto w-48 object-contain md:w-64"
           />
-        </div>
+        </div> */}
         <Image
           src="/hero-1.webp"
           alt="Hero"
@@ -60,19 +62,22 @@ export default function Home() {
             powered by biotechnology and bio-fermentation, with one singular
             intention: to heal and restore skin.
           </p>
+
+          <button className="mt-8 underline">Shop now </button>
         </div>
         <div className="md:w-1/2">
           <img
-            src="/hero.webp"
+            src="/side1.webp"
             alt="Future skincare"
             className="w-full object-cover"
           />
         </div>
       </section>
-      <FAQ />
+      <HydrogenProducts />
+
       <section className="px-4 py-12 md:px-8 md:py-16">
         <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
-          Rooted in Nature, Born to Glow
+          Pure Ingredients, Pure Results
         </h2>
         <p className="font-neue-montreal mt-6 max-w-xl text-lg md:mt-8 md:text-xl">
           SHAO celebrates the power of nature's purest ingredients. We blend
@@ -81,6 +86,7 @@ export default function Home() {
           product tells a story of heritage, purity, and conscious beauty.
         </p>
       </section>
+
       <section className="flex flex-col gap-6 px-4 py-12 md:flex-row-reverse md:gap-8 md:px-8 md:py-16">
         <div className="md:w-1/2">
           <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
@@ -101,6 +107,19 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="relative h-svh w-full bg-blue-200">
+        <Image
+          src="/hero-1.webp"
+          alt="Hero"
+          width={1000}
+          height={1000}
+          className="absolute inset-0 h-full w-full object-cover"
+          priority
+        />
+      </section>
+      <Press />
+      <FAQ />
+
       <section className="relative flex h-[60vh] items-end px-4 py-12 md:h-svh md:px-8 md:py-16">
         <div className="relative z-10 text-white">
           <h2 className="font-neue-montreal-mono text-sm text-white/70 uppercase">
@@ -113,7 +132,7 @@ export default function Home() {
           </p>
         </div>
         <Image
-          src="/hero.webp"
+          src="/lastimg.webp"
           alt="Future skincare"
           width={1000}
           height={1000}
