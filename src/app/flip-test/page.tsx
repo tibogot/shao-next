@@ -4,7 +4,6 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Navbar from "../../components/Navbar";
 
 gsap.registerPlugin(Flip, ScrollTrigger);
 
@@ -88,8 +87,6 @@ export default function FlipTest() {
 
   return (
     <main>
-      <Navbar variant="page" />
-
       {/* Exact CodePen HTML structure */}
       <div className="spacer">scroll down</div>
       <div className="main">

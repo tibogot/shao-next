@@ -2,7 +2,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { fetchAllProducts } from "../../lib/shopify";
 import Link from "next/link";
-import Navbar from "../../components/Navbar";
 
 interface Product {
   id: string;
@@ -102,69 +101,68 @@ export default function ShopPage() {
   }, [loadMore, observerRef, pageInfo]);
 
   return (
-    <>
-      <Navbar variant="page" />
-      <div className="mx-auto bg-green-200 px-4 py-8">
-        <h1 className="mb-6 text-3xl font-bold">Shop</h1>
-        <div className="mb-6 flex flex-wrap items-end gap-4 px-4">
-          <div>
-            <label className="block text-sm font-medium">Search</label>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="rounded border px-2 py-1"
-              placeholder="Product title..."
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Min Price</label>
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              className="rounded border px-2 py-1"
-              placeholder="0"
-              min="0"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Max Price</label>
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="rounded border px-2 py-1"
-              placeholder="1000"
-              min="0"
-            />
-          </div>
+    <div className="mx-auto bg-green-200 px-4 py-8">
+      <h1 className="mb-6 text-3xl font-bold">Shop</h1>
+      <div className="mb-6 flex flex-wrap items-end gap-4 px-4">
+        <div>
+          <label className="block text-sm font-medium">Search</label>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="rounded border px-2 py-1"
+            placeholder="Product title..."
+          />
         </div>
-        {loading && <div className="mb-4">Loading...</div>}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {filtered.map((p) => (
-            <Link
-              key={p.id}
-              href={`/product/${p.handle}`}
-              className="block min-h-[350px] rounded-lg border bg-white hover:shadow-lg"
-            >
-              <img
-                src={p.images.edges[0]?.node.url}
-                alt={p.title}
-                className="mb-2 h-80 w-full rounded object-cover"
-              />
-              <div className="font-neue-montreal-mono text-lg font-bold tracking-wide uppercase">
-                {p.title}
-              </div>
-              <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
-                {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
-              </div>
-            </Link>
-          ))}
+        <div>
+          <label className="block text-sm font-medium">Min Price</label>
+          <input
+            type="number"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="rounded border px-2 py-1"
+            placeholder="0"
+            min="0"
+          />
         </div>
-        {/* Infinite scroll trigger */}
-        <div ref={observerRef} className="h-8"></div>
+        <div>
+          <label className="block text-sm font-medium">Max Price</label>
+          <input
+            type="number"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="rounded border px-2 py-1"
+            placeholder="1000"
+            min="0"
+          />
+        </div>
       </div>
-    </>
+      {loading && <div className="mb-4">Loading...</div>}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {filtered.map((p) => (
+          <Link
+            key={p.id}
+            href={`/product/${p.handle}`}
+            className="block min-h-[350px] rounded-lg border bg-white hover:shadow-lg"
+          >
+            <img
+              src={p.images.edges[0]?.node.url}
+              alt={p.title}
+              className="mb-2 h-80 w-full rounded object-cover"
+            />
+            <div className="font-neue-montreal-mono text-lg font-bold tracking-wide uppercase">
+              {p.title}
+            </div>
+            <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+              {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
+            </div>
+          </Link>
+        ))}
+      </div>
+      {/* Infinite scroll trigger */}
+      <div ref={observerRef} className="h-8">
+        {" "}
+      </div>
+    </div>
   );
 }
