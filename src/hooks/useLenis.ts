@@ -4,14 +4,8 @@ import Lenis from "lenis";
 
 export function useLenis() {
   useEffect(() => {
-    // Initialize Lenis
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    });
+    // Initialize Lenis with minimal configuration
+    const lenis = new Lenis();
 
     // Animation frame function
     function raf(time: number) {
