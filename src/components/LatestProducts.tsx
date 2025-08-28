@@ -42,7 +42,7 @@ export default function LatestProducts() {
       });
   }, []);
   return (
-    <section className="bg-green-300 px-4 py-8 md:px-8">
+    <section className="px-4 py-8 md:px-8">
       <h2 className="mb-4 text-2xl font-bold">Latest Products</h2>
       {loading && <div className="py-4 text-center">Loading products...</div>}
       {!loading && products.length === 0 && (

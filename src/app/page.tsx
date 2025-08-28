@@ -37,17 +37,34 @@ export default function Home() {
           <button className="btn-primary mt-8"> Shop now </button>
         </div> */}
       </div>
+      <section className="px-4 py-16 md:px-8">
+        <h2 className="font-neue-montreal-mono uppercase">
+          Rooted in Nature, Born to Glow
+        </h2>
+        <p className="font-neue-montreal mt-4 max-w-2xl text-xl">
+          SHAO celebrates the power of nature's purest ingredients. We blend
+          traditional botanical wisdom with cutting-edge sustainable practices
+          to create cosmetics that honor both your skin and our planet. Every
+          product tells a story of heritage, purity, and conscious beauty.
+        </p>
+      </section>
       <LatestProducts />
-      <section className="h-svh bg-blue-500">
-        <div className="conta">
-          <h2 className="text-2xl font-medium">Future skincare</h2>
-          <p className="mt-2 text-base">
-            Innovative formules to nouish, awaken, and restore your skin
-          </p>
+      <section className="flex px-4 py-16 md:px-8">
+        <div className="left w-1/2">
+          <h2 className="font-neue-montreal-mono uppercase">
+            Rooted in Nature, Born to Glow
+          </h2>
+          <p className="font-neue-montreal mt-4 max-w-2xl text-xl">
+            SHAO celebrates the power of nature's purest ingredients. We blend
+            traditional botanical wisdom with cutting-edge sustainable practices
+            to create cosmetics that honor both your skin and our planet. Every
+            product tells a story of heritage, purity, and conscious beauty.
+          </p>{" "}
+        </div>
+        <div className="right w-1/2">
+          <img src="/hero.webp" alt="Future skincare" />
         </div>
       </section>
-      <h1 className="font-neue-montreal text-4xl font-medium">Hello World</h1>
-      <h1 className="font-neue-montreal-mono text-4xl">Hello World</h1>
     </main>
   );
 }
