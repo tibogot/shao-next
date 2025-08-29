@@ -136,9 +136,83 @@ export async function fetchProductByHandle(handle: string) {
       product(handle: \"${handle}\") {
         id
         title
+        handle
+        description
         descriptionHtml
-        images(first: 4) { edges { node { url } } }
-        priceRange { minVariantPrice { amount currencyCode } }
+        vendor
+        productType
+        tags
+        availableForSale
+        createdAt
+        updatedAt
+        publishedAt
+        images(first: 10) { 
+          edges { 
+            node { 
+              id
+              url
+              altText
+              width
+              height
+            } 
+          } 
+        }
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              sku
+              availableForSale
+              quantityAvailable
+              price {
+                amount
+                currencyCode
+              }
+              compareAtPrice {
+                amount
+                currencyCode
+              }
+              selectedOptions {
+                name
+                value
+              }
+              image {
+                id
+                url
+                altText
+              }
+            }
+          }
+        }
+        options {
+          id
+          name
+          values
+        }
+        priceRange { 
+          minVariantPrice { amount currencyCode }
+          maxVariantPrice { amount currencyCode }
+        }
+        compareAtPriceRange {
+          minVariantPrice { amount currencyCode }
+          maxVariantPrice { amount currencyCode }
+        }
+        metafields(identifiers: [
+          {namespace: "custom", key: "ingredients"},
+          {namespace: "custom", key: "how_to_use"},
+          {namespace: "custom", key: "benefits"},
+          {namespace: "custom", key: "skin_type"}
+        ]) {
+          key
+          value
+          type
+          namespace
+        }
+        seo {
+          title
+          description
+        }
       }
     }
   `;
@@ -149,5 +223,65 @@ export async function fetchProductByHandle(handle: string) {
   } catch (error) {
     console.error("Failed to fetch product:", error);
     return null;
+  }
+}
+
+// Fetch related products by similar tags or vendor
+export async function fetchRelatedProducts(
+  productId: string,
+  tags: string[],
+  vendor: string,
+  limit = 6,
+) {
+  if (!client) {
+    console.warn(
+      "Shopify client not configured - missing environment variables",
+    );
+    return [];
+  }
+
+  // Create query based on tags or vendor
+  const tagQuery = tags
+    .slice(0, 3)
+    .map((tag) => `tag:${tag}`)
+    .join(" OR ");
+  const query = `
+    {
+      products(first: ${limit + 1}, query: "${tagQuery} OR vendor:${vendor}") {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            vendor
+            availableForSale
+            images(first: 1) { 
+              edges { 
+                node { 
+                  url
+                  altText
+                } 
+              } 
+            }
+            priceRange { 
+              minVariantPrice { amount currencyCode }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await client.request(query);
+    // Filter out the current product and return others
+    return data.products.edges
+      .map((edge: any) => edge.node)
+      .filter((product: any) => product.id !== productId)
+      .slice(0, limit);
+  } catch (error) {
+    console.error("Failed to fetch related products:", error);
+    return [];
   }
 }
