@@ -344,11 +344,11 @@ export default function ProductPage() {
                       ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
                       : "cursor-pointer border-gray-300 hover:border-gray-400 hover:bg-gray-50"
                   }`}
-                  disabled={
+                  disabled={Boolean(
                     selectedVariant &&
-                    selectedVariant.quantityAvailable > 0 &&
-                    quantity >= selectedVariant.quantityAvailable
-                  }
+                      selectedVariant.quantityAvailable > 0 &&
+                      quantity >= selectedVariant.quantityAvailable,
+                  )}
                 >
                   +
                 </button>
