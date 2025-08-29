@@ -102,7 +102,7 @@ export default function ProductPage() {
           // Set default selected options
           const defaultOptions: Record<string, string> = {};
           productData.variants.edges[0].node.selectedOptions.forEach(
-            (option) => {
+            (option: { name: string; value: string }) => {
               defaultOptions[option.name] = option.value;
             },
           );
