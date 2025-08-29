@@ -4,22 +4,22 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#FBFBFB] px-4 pt-16 pb-8 md:px-8">
+    <footer className="bg-[#FBFBFB] px-4 pt-12 pb-6 md:px-8 md:pt-16 md:pb-8">
       <div>
         {/* Main footer content */}
-        <div className="flex flex-col gap-12 md:flex-row md:justify-between">
+        <div className="flex flex-col gap-8 md:gap-12 lg:flex-row lg:justify-between">
           {/* Links Block - Left Side */}
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 md:gap-8">
             {/* SHOP Section */}
             <div>
-              <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
+              <h3 className="font-neue-montreal-mono mb-4 text-xs font-medium tracking-wider text-black uppercase md:mb-6 md:text-sm">
                 SHOP
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-2 md:space-y-1">
                 <li>
                   <a
                     href="/products"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Products
                   </a>
@@ -27,7 +27,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/about"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     About
                   </a>
@@ -35,7 +35,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/pricing"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Pricing
                   </a>
@@ -43,7 +43,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/community"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Community
                   </a>
@@ -53,14 +53,14 @@ export default function Footer() {
 
             {/* LEARN Section */}
             <div>
-              <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
+              <h3 className="font-neue-montreal-mono mb-4 text-xs font-medium tracking-wider text-black uppercase md:mb-6 md:text-sm">
                 LEARN
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-2 md:space-y-1">
                 <li>
                   <a
                     href="/shop"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Shop
                   </a>
@@ -68,7 +68,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/faq"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     FAQ
                   </a>
@@ -76,7 +76,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/results"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Results
                   </a>
@@ -84,7 +84,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/journal"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Journal
                   </a>
@@ -93,17 +93,17 @@ export default function Footer() {
             </div>
 
             {/* SOCIAL MEDIA Section */}
-            <div>
-              <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
+            <div className="col-span-2 md:col-span-1">
+              <h3 className="font-neue-montreal-mono mb-4 text-xs font-medium tracking-wider text-black uppercase md:mb-6 md:text-sm">
                 SOCIAL MEDIA
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-2 md:space-y-1">
                 <li>
                   <a
                     href="https://tiktok.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     TikTok
                   </a>
@@ -113,7 +113,7 @@ export default function Footer() {
                     href="https://instagram.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     Instagram
                   </a>
@@ -121,7 +121,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="mailto:info@shao.com"
-                    className="font-neue-montreal text-sm text-black/70 transition-colors hover:text-black"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     info@shao.com
                   </a>
@@ -131,11 +131,11 @@ export default function Footer() {
           </div>
 
           {/* Newsletter Section - Right Side */}
-          <div className="flex-shrink-0 md:max-w-md">
-            <h3 className="font-neue-montreal-mono mb-6 text-sm font-medium tracking-wider text-black uppercase">
+          <div className="mt-4 flex-shrink-0 md:mt-0 lg:max-w-md">
+            <h3 className="font-neue-montreal-mono mb-4 text-xs font-medium tracking-wider text-black uppercase md:mb-6 md:text-sm">
               SUBSCRIBE TO OUR NEWSLETTER
             </h3>
-            <p className="font-neue-montreal mb-6 max-w-md text-sm text-black/70">
+            <p className="font-neue-montreal mb-4 max-w-md text-xs text-black/70 md:mb-6 md:text-sm">
               Stay updated with our latest product launches, skincare tips, and
               exclusive offers. Join our community of conscious beauty
               enthusiasts.
@@ -144,11 +144,11 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Email address"
-                className="font-neue-montreal w-full border-b border-black/20 bg-transparent pb-2 text-sm text-black placeholder-black/50 focus:border-black focus:outline-none"
+                className="font-neue-montreal w-full border-b border-black/20 bg-transparent pb-2 text-xs text-black placeholder-black/50 focus:border-black focus:outline-none md:text-sm"
               />
               <button
                 type="submit"
-                className="font-neue-montreal w-full bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-black/80"
+                className="font-neue-montreal w-full bg-black px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-black/80 md:px-6 md:py-3 md:text-sm"
               >
                 Subscribe
               </button>
@@ -157,21 +157,24 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="my-12 h-px bg-black/10"></div>
+        <div className="my-8 h-px bg-black/10 md:my-12"></div>
 
         {/* Bottom section with logo and copyright */}
-        <div className="flex flex-col items-end justify-between space-y-6 md:flex-row md:space-y-0">
+        <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:items-end md:space-y-0">
           {/* Logo */}
           <div className="flex items-center">
-            <img
+            <Image
               src="/logo.svg"
               alt="Shao"
-              className="h-24 w-auto object-contain brightness-0"
+              width={116}
+              height={39}
+              className="h-16 w-auto object-contain brightness-0 md:h-20 lg:h-24"
+              priority
             />
           </div>
 
           {/* Copyright */}
-          <p className="font-neue-montreal text-sm text-black/60">
+          <p className="font-neue-montreal text-xs text-black/60 md:text-sm">
             © 2025 | Shao.
           </p>
         </div>
