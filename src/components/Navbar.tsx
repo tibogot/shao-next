@@ -78,10 +78,13 @@ export default function Navbar() {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
-    if (logoRef.current) {
+    const setupAnimation = () => {
+      if (!logoRef.current) return;
+
       // Calculate hero position relative to navbar
       const viewportHeight = window.innerHeight;
-      const isMobile = window.innerWidth < 768;
+      const viewportWidth = window.innerWidth;
+      const isMobile = viewportWidth < 768;
 
       // Calculate how far to move logo to center of screen
       const heroY = viewportHeight / 2; // Center of viewport
@@ -90,8 +93,31 @@ export default function Navbar() {
         logoRef.current.offsetHeight / 2;
       const distanceToHero = heroY - navbarCenter;
 
-      // Scale up to hero size
-      const heroScale = isMobile ? 8 : 12; // Much larger for hero
+      // Calculate safe logo scale that never goes out of screen
+      const logoElement = logoRef.current.querySelector("img");
+      const logoNaturalWidth = logoElement ? logoElement.offsetWidth : 116; // Fallback to SVG width
+      const logoNaturalHeight = logoElement ? logoElement.offsetHeight : 39; // Fallback to SVG height
+
+      // Calculate maximum scale that fits within viewport with padding
+      const horizontalPadding = isMobile ? 40 : 80; // 20px each side on mobile, 40px on desktop
+      const verticalPadding = isMobile ? 120 : 160; // More padding for navbar and bottom
+
+      const maxWidthScale =
+        (viewportWidth - horizontalPadding) / logoNaturalWidth;
+      const maxHeightScale =
+        (viewportHeight - verticalPadding) / logoNaturalHeight;
+
+      // Use the smaller scale to ensure logo fits completely within viewport
+      const maxSafeScale = Math.min(maxWidthScale, maxHeightScale);
+
+      // Set minimum scale and cap at safe maximum
+      const heroScale = Math.max(
+        isMobile ? 4 : 6,
+        Math.min(maxSafeScale, isMobile ? 12 : 16),
+      );
+
+      // Kill existing ScrollTriggers
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 
       // Set initial state (logo at hero position)
       gsap.set(logoRef.current, {
@@ -136,17 +162,31 @@ export default function Navbar() {
         },
         0.9, // Near the end
       );
-    }
+    };
+
+    // Setup initial animation
+    setupAnimation();
+
+    // Handle window resize
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      // Debounce resize events
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(setupAnimation, 150);
+    };
+
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
+      window.removeEventListener("resize", handleResize);
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [isHomePage]);
 
   return (
     <motion.nav
-      className="font-neue-montreal fixed top-0 right-0 left-0 z-40 flex w-full items-center justify-between px-4 py-4 md:px-8 md:py-6"
+      className="font-neue-montreal fixed top-0 right-0 left-0 z-40 flex w-full items-center justify-between overflow-visible px-4 py-4 md:px-8 md:py-6"
       data-nextjs-scroll-focus-boundary
       initial={{ opacity: 0 }} // Start completely hidden
       animate={{
@@ -287,10 +327,16 @@ export default function Navbar() {
       <div
         ref={logoRef}
         className="absolute left-1/2 z-50 -translate-x-1/2 transform overflow-visible opacity-0"
-        style={{ visibility: "hidden" }}
+        style={{ visibility: "hidden", width: "max-content" }}
       >
-        <Link href="/" className="flex cursor-pointer items-center">
-          <div className="flex h-8 w-16 items-center justify-center overflow-visible md:h-10 md:w-24">
+        <Link
+          href="/"
+          className="flex cursor-pointer items-center overflow-visible"
+        >
+          <div
+            className="flex items-center justify-center overflow-visible"
+            style={{ minWidth: "200px", minHeight: "200px" }}
+          >
             <Image
               src="/logo.svg"
               alt="Logo"
@@ -298,6 +344,7 @@ export default function Navbar() {
               height={39}
               className="h-6 w-auto object-cover md:h-8"
               priority
+              style={{ maxWidth: "none" }}
             />
           </div>
         </Link>
