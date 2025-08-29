@@ -1,23 +1,34 @@
 "use client";
 
 import Image from "next/image";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { useState, useRef } from "react";
 import LatestProducts from "../components/LatestProducts";
 import HydrogenProducts from "../components/HydrogenProducts";
 import FAQ from "@/components/FAQ";
 import Press from "@/components/Press";
 
 export default function Home() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  // Track scroll position for navbar
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    // Use the EXACT same logic as navbar component
+    const heroHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+    setIsScrolled(latest > heroHeight * 0.8); // Trigger at 80% of hero height
+  });
+
+  // Logo animation will be handled in the Navbar component
+
   return (
     <main className="bg-[#FBFBFB]">
-      <div className="hero relative flex h-svh w-full items-end overflow-visible bg-purple-200 px-4 py-16 md:px-8 md:py-8">
-        {/* Logo Container */}
-        {/* <div className="relative flex items-center justify-center">
-          <img
-            src="/logo.svg"
-            alt="Logo"
-            className="h-auto w-48 object-contain md:w-64"
-          />
-        </div> */}
+      <div
+        ref={heroRef}
+        className="hero relative flex h-svh w-full items-center justify-center overflow-visible bg-purple-200 px-4 py-16 md:px-8 md:py-8"
+      >
         <Image
           src="/hero-1.webp"
           alt="Hero"
@@ -27,10 +38,7 @@ export default function Home() {
           priority
         />
 
-        {/* Big Centered Logo */}
-        {/* <div className="z-20 flex items-center justify-center overflow-visible"> */}
-
-        {/* </div> */}
+        {/* No more hero logo - we'll use the navbar logo instead */}
 
         {/* <div className="hero-text font-neue-montreal z-10 text-white">
           <h2 className="text-2xl font-medium"> Future skincare </h2>

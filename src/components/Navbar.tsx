@@ -1,36 +1,171 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useCartStore } from "../store/cartStore";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
   const items = useCartStore((s) => s.items);
   const openCart = useCartStore((s) => s.openCart);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false); // Always start with false to prevent flash
+  const [isNavbarReady, setIsNavbarReady] = useState(false); // Track when navbar should be visible
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const logoRef = useRef<HTMLDivElement>(null);
+
+  // Reset states when navigating to home page
+  useEffect(() => {
+    if (isHomePage) {
+      setIsScrolled(false);
+    }
+    // Always reset navbar ready state for clean initialization
+    setIsNavbarReady(false);
+  }, [isHomePage]);
 
   // Track scroll position
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Change navbar style when scrolled past hero section (100vh)
-    const heroHeight = typeof window !== "undefined" ? window.innerHeight : 800;
-    setIsScrolled(latest > heroHeight * 0.8); // Trigger at 80% of hero height
+    // Only apply scroll behavior on home page
+    if (isHomePage) {
+      // Change navbar style when scrolled past hero section (100vh)
+      const heroHeight =
+        typeof window !== "undefined" ? window.innerHeight : 800;
+      setIsScrolled(latest > heroHeight * 0.8); // Trigger at 80% of hero height
+    }
   });
+
+  // Set initial navbar state after mount to prevent flash
+  useEffect(() => {
+    if (!isHomePage) {
+      // On non-home pages, set to scrolled state after a brief delay
+      const timer = setTimeout(() => {
+        setIsScrolled(true);
+        setIsNavbarReady(true);
+      }, 50); // Small delay to prevent flash
+      return () => clearTimeout(timer);
+    } else {
+      // On home page, delay ready state to ensure logo animation sets up first
+      const timer = setTimeout(() => {
+        setIsNavbarReady(true);
+      }, 300); // Longer delay to ensure GSAP sets up first
+      return () => clearTimeout(timer);
+    }
+  }, [isHomePage]);
+
+  useEffect(() => {
+    // Only apply GSAP animation on home page
+    if (!isHomePage) {
+      // On non-home pages, show logo in normal navbar state
+      if (logoRef.current) {
+        gsap.set(logoRef.current, {
+          y: 0,
+          scale: 1,
+          filter: "brightness(0)", // Black for navbar
+          opacity: 1,
+          visibility: "visible",
+        });
+      }
+      return;
+    }
+
+    // Register ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (logoRef.current) {
+      // Calculate hero position relative to navbar
+      const viewportHeight = window.innerHeight;
+      const isMobile = window.innerWidth < 768;
+
+      // Calculate how far to move logo to center of screen
+      const heroY = viewportHeight / 2; // Center of viewport
+      const navbarCenter =
+        logoRef.current.getBoundingClientRect().top +
+        logoRef.current.offsetHeight / 2;
+      const distanceToHero = heroY - navbarCenter;
+
+      // Scale up to hero size
+      const heroScale = isMobile ? 8 : 12; // Much larger for hero
+
+      // Set initial state (logo at hero position)
+      gsap.set(logoRef.current, {
+        y: distanceToHero,
+        scale: heroScale,
+        filter: "brightness(1)", // White for hero
+        opacity: 1,
+        visibility: "visible",
+      });
+
+      // Create timeline to animate back to navbar position
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: `top -${viewportHeight * 0.8}px`, // End at 80% of viewport
+          scrub: 1.2,
+          // @ts-ignore
+          onComplete: () => {
+            // Ensure final state
+            gsap.set(logoRef.current, {
+              y: 0,
+              scale: 1,
+              filter: "brightness(0)", // Black for navbar
+            });
+          },
+        },
+      });
+
+      // Animate from hero back to navbar
+      tl.to(logoRef.current, {
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: "power2.out",
+      }).to(
+        logoRef.current,
+        {
+          filter: "brightness(0)", // Change to black
+          duration: 0.1,
+          ease: "none",
+        },
+        0.9, // Near the end
+      );
+    }
+
+    // Cleanup
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [isHomePage]);
 
   return (
     <motion.nav
       className="font-neue-montreal fixed top-0 right-0 left-0 z-40 flex w-full items-center justify-between px-4 py-4 md:px-8 md:py-6"
       data-nextjs-scroll-focus-boundary
+      initial={{ opacity: 0 }} // Start completely hidden
       animate={{
-        backgroundColor: isScrolled
-          ? "rgba(255, 255, 255, 0.95)"
-          : "rgba(255, 255, 255, 0)",
-        backdropFilter: isScrolled ? "blur(10px)" : "blur(0px)",
+        backgroundColor:
+          isScrolled && isNavbarReady
+            ? "rgba(255, 255, 255, 0.95)"
+            : "rgba(255, 255, 255, 0)",
+        backdropFilter:
+          isScrolled && isNavbarReady ? "blur(10px)" : "blur(0px)",
+        opacity: isNavbarReady ? 1 : 0,
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{
+        duration: 0.3,
+        ease: "easeInOut",
+        opacity: {
+          duration: 0.6, // Longer, smoother fade-in
+          ease: "easeOut",
+        },
+      }}
       style={{
         color: isScrolled ? "#000000" : "#ffffff",
       }}
@@ -148,18 +283,21 @@ export default function Navbar() {
         </motion.div>
       </div>
 
-      {/* Center - Logo */}
-      <div className="absolute left-1/2 -translate-x-1/2 transform overflow-visible">
+      {/* Center - Logo with GSAP animation */}
+      <div
+        ref={logoRef}
+        className="absolute left-1/2 z-50 -translate-x-1/2 transform overflow-visible opacity-0"
+        style={{ visibility: "hidden" }}
+      >
         <Link href="/" className="flex cursor-pointer items-center">
           <div className="flex h-8 w-16 items-center justify-center overflow-visible md:h-10 md:w-24">
-            <motion.img
+            <Image
               src="/logo.svg"
               alt="Logo"
+              width={116}
+              height={39}
               className="h-6 w-auto object-cover md:h-8"
-              animate={{
-                filter: isScrolled ? "brightness(0)" : "brightness(1)",
-              }}
-              transition={{ duration: 0.3 }}
+              priority
             />
           </div>
         </Link>
