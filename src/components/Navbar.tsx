@@ -65,7 +65,7 @@ export default function Navbar() {
   }, [isHomePage]);
 
   useEffect(() => {
-    // Only apply GSAP animation on home page
+    // Only apply GSAP animation on home page AND desktop
     if (!isHomePage) {
       // On non-home pages, show logo in normal navbar state
       if (logoRef.current) {
@@ -80,6 +80,42 @@ export default function Navbar() {
       return;
     }
 
+    // Check if mobile - if so, show static logo and skip GSAP
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      // On mobile, show logo in navbar position but make it responsive to scroll
+      if (logoRef.current) {
+        // Check if we're at the top of the page for mobile logo color
+        const isAtTop = window.scrollY < window.innerHeight * 0.8;
+
+        gsap.set(logoRef.current, {
+          y: 0,
+          scale: 1,
+          filter: isAtTop ? "brightness(1)" : "brightness(0)", // White on hero, black when scrolled
+          opacity: 1,
+          visibility: "visible",
+        });
+
+        // Add scroll listener for mobile logo color changes
+        const handleMobileScroll = () => {
+          if (logoRef.current) {
+            const isAtTop = window.scrollY < window.innerHeight * 0.8;
+            gsap.set(logoRef.current, {
+              filter: isAtTop ? "brightness(1)" : "brightness(0)",
+            });
+          }
+        };
+
+        window.addEventListener("scroll", handleMobileScroll);
+
+        // Cleanup scroll listener
+        return () => {
+          window.removeEventListener("scroll", handleMobileScroll);
+        };
+      }
+      return;
+    }
+
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
@@ -89,7 +125,6 @@ export default function Navbar() {
       // Calculate hero position relative to navbar
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
-      const isMobile = viewportWidth < 768;
 
       // Calculate how far to move logo to center of screen
       const heroY = viewportHeight / 2; // Center of viewport
@@ -104,8 +139,8 @@ export default function Navbar() {
       const logoNaturalHeight = logoElement ? logoElement.offsetHeight : 39; // Fallback to SVG height
 
       // Calculate maximum scale that fits within viewport with padding
-      const horizontalPadding = isMobile ? 40 : 80; // 20px each side on mobile, 40px on desktop
-      const verticalPadding = isMobile ? 120 : 160; // More padding for navbar and bottom
+      const horizontalPadding = 80; // 40px each side on desktop
+      const verticalPadding = 160; // More padding for navbar and bottom
 
       const maxWidthScale =
         (viewportWidth - horizontalPadding) / logoNaturalWidth;
@@ -116,10 +151,7 @@ export default function Navbar() {
       const maxSafeScale = Math.min(maxWidthScale, maxHeightScale);
 
       // Set minimum scale and cap at safe maximum
-      const heroScale = Math.max(
-        isMobile ? 2 : 2.5,
-        Math.min(maxSafeScale, isMobile ? 5 : 6),
-      );
+      const heroScale = Math.max(2.5, Math.min(maxSafeScale, 6));
 
       // Kill existing ScrollTriggers
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());

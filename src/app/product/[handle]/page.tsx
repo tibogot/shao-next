@@ -221,7 +221,7 @@ export default function ProductPage() {
     <div className="min-h-screen bg-[#FBFBFB] pt-20">
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
         {/* Product Main Section */}
-        <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+        <div className="mb-16 grid grid-cols-1 gap-8 gap-y-12 lg:grid-cols-2 lg:gap-12">
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
@@ -251,7 +251,7 @@ export default function ProductPage() {
                   <motion.button
                     key={image.node.id}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition-all ${
+                    className={`h-16 w-16 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition-all md:h-20 md:w-20 ${
                       selectedImageIndex === index
                         ? "border-black shadow-md"
                         : "border-gray-200 hover:border-gray-300"
@@ -279,22 +279,22 @@ export default function ProductPage() {
               <p className="font-neue-montreal-mono mb-2 text-sm text-black/60 uppercase">
                 {product.vendor}
               </p>
-              <h1 className="font-neue-montreal mb-4 text-3xl font-light md:text-4xl">
+              <h1 className="font-neue-montreal mb-4 text-2xl font-light md:text-3xl lg:text-4xl">
                 {product.title}
               </h1>
 
               {/* Price */}
-              <div className="mb-4 flex items-center gap-3">
-                <span className="text-2xl font-light">
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <span className="text-xl font-light md:text-2xl">
                   ${parseFloat(currentPrice).toFixed(2)}{" "}
                   {selectedVariant?.price.currencyCode || "USD"}
                 </span>
                 {isOnSale && compareAtPrice && (
                   <>
-                    <span className="text-lg text-gray-500 line-through">
+                    <span className="text-base text-gray-500 line-through md:text-lg">
                       ${parseFloat(compareAtPrice).toFixed(2)}
                     </span>
-                    <span className="rounded bg-red-100 px-2 py-1 text-sm text-red-700">
+                    <span className="rounded bg-red-100 px-2 py-1 text-xs text-red-700 md:text-sm">
                       Save ${savings.toFixed(2)}
                     </span>
                   </>
@@ -331,7 +331,7 @@ export default function ProductPage() {
                       <motion.button
                         key={value}
                         onClick={() => handleOptionChange(option.name, value)}
-                        className={`cursor-pointer rounded-lg border px-4 py-2 transition-all ${
+                        className={`cursor-pointer rounded-lg border px-3 py-2 text-sm transition-all md:px-4 ${
                           selectedOptions[option.name] === value
                             ? "border-black bg-black text-white"
                             : "border-gray-300 hover:border-gray-400"
@@ -406,7 +406,7 @@ export default function ProductPage() {
             </motion.button>
 
             {/* Action Buttons */}
-            <div className="mt-4 flex gap-3">
+            <div className="mt-4 flex flex-col gap-3 md:flex-row">
               <motion.button
                 onClick={addToWishlist}
                 className="flex-1 rounded-lg border border-gray-300 py-3 text-sm font-medium text-gray-700 transition-all hover:border-black hover:text-black"
@@ -427,7 +427,7 @@ export default function ProductPage() {
 
             {/* Product Details Tabs */}
             <div className="border-t pt-6">
-              <div className="mb-6 flex border-b">
+              <div className="mb-10 flex flex-wrap gap-y-4 overflow-x-auto border-b md:overflow-visible">
                 {[
                   { key: "description", label: "Description" },
                   { key: "ingredients", label: "Ingredients" },
@@ -437,7 +437,7 @@ export default function ProductPage() {
                   <button
                     key={key}
                     onClick={() => setActiveTab(key as any)}
-                    className={`font-neue-montreal-mono cursor-pointer px-4 pb-4 text-sm uppercase transition-colors ${
+                    className={`font-neue-montreal-mono flex-shrink-0 cursor-pointer px-3 pb-4 text-xs whitespace-nowrap uppercase transition-colors md:px-4 md:text-sm ${
                       activeTab === key
                         ? "border-b-2 border-black text-black"
                         : "text-gray-500 hover:text-gray-700"
@@ -448,57 +448,59 @@ export default function ProductPage() {
                 ))}
               </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="prose prose-gray max-w-none"
-                >
-                  {activeTab === "description" && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: product.descriptionHtml,
-                      }}
-                    />
-                  )}
-                  {activeTab === "ingredients" && (
-                    <div>
-                      {getMetafieldValue("ingredients") ? (
-                        <p>{getMetafieldValue("ingredients")}</p>
-                      ) : (
-                        <p className="text-gray-500">
-                          Ingredients information not available.
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  {activeTab === "howToUse" && (
-                    <div>
-                      {getMetafieldValue("how_to_use") ? (
-                        <p>{getMetafieldValue("how_to_use")}</p>
-                      ) : (
-                        <p className="text-gray-500">
-                          Usage instructions not available.
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  {activeTab === "benefits" && (
-                    <div>
-                      {getMetafieldValue("benefits") ? (
-                        <p>{getMetafieldValue("benefits")}</p>
-                      ) : (
-                        <p className="text-gray-500">
-                          Benefits information not available.
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
+              <div className="pt-4">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="prose prose-gray prose-sm md:prose-base max-w-none"
+                  >
+                    {activeTab === "description" && (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: product.descriptionHtml,
+                        }}
+                      />
+                    )}
+                    {activeTab === "ingredients" && (
+                      <div>
+                        {getMetafieldValue("ingredients") ? (
+                          <p>{getMetafieldValue("ingredients")}</p>
+                        ) : (
+                          <p className="text-gray-500">
+                            Ingredients information not available.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    {activeTab === "howToUse" && (
+                      <div>
+                        {getMetafieldValue("how_to_use") ? (
+                          <p>{getMetafieldValue("how_to_use")}</p>
+                        ) : (
+                          <p className="text-gray-500">
+                            Usage instructions not available.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    {activeTab === "benefits" && (
+                      <div>
+                        {getMetafieldValue("benefits") ? (
+                          <p>{getMetafieldValue("benefits")}</p>
+                        ) : (
+                          <p className="text-gray-500">
+                            Benefits information not available.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>
@@ -506,10 +508,10 @@ export default function ProductPage() {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="border-t pt-16">
-            <h2 className="font-neue-montreal mb-8 text-2xl font-light md:text-3xl">
+            <h2 className="font-neue-montreal mb-8 text-xl font-light md:text-2xl lg:text-3xl">
               You might also like
             </h2>
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {relatedProducts.slice(0, 4).map((relatedProduct) => (
                 <motion.a
                   key={relatedProduct.id}
