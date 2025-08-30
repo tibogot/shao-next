@@ -519,7 +519,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <div
-            className="fixed inset-0 z-30 bg-black/30"
+            className="fixed inset-0 z-50 bg-black/30"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <motion.div
@@ -538,7 +538,7 @@ export default function Navbar() {
                   className="rounded-full p-2 transition-colors hover:bg-gray-100"
                 >
                   <svg
-                    className="h-6 w-6"
+                    className="h-6 w-6 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
