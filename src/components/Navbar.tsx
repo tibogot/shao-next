@@ -126,33 +126,47 @@ export default function Navbar() {
         filter: "brightness(1)", // White for hero
         opacity: 1,
         visibility: "visible",
+        // Mobile performance optimizations
+        force3D: true, // Force GPU acceleration
+        willChange: isMobile ? "transform" : "auto", // Optimize for mobile transforms
       });
+
+      // Mobile-optimized ScrollTrigger settings
+      const scrollTriggerConfig = {
+        trigger: "body",
+        start: "top top",
+        end: `top -${viewportHeight * 0.8}px`, // End at 80% of viewport
+        scrub: isMobile ? 0.5 : 1.2, // Much smoother scrub for mobile
+        ease: "power2.out",
+        // Mobile-specific optimizations
+        ...(isMobile && {
+          refreshPriority: -1, // Lower priority for mobile
+          invalidateOnRefresh: false, // Don't invalidate on mobile refresh
+        }),
+        // @ts-ignore
+        onComplete: () => {
+          // Ensure final state
+          gsap.set(logoRef.current, {
+            y: 0,
+            scale: 1,
+            filter: "brightness(0)", // Black for navbar
+          });
+        },
+      };
 
       // Create timeline to animate back to navbar position
       const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: `top -${viewportHeight * 0.8}px`, // End at 80% of viewport
-          scrub: 1.2,
-          // @ts-ignore
-          onComplete: () => {
-            // Ensure final state
-            gsap.set(logoRef.current, {
-              y: 0,
-              scale: 1,
-              filter: "brightness(0)", // Black for navbar
-            });
-          },
-        },
+        scrollTrigger: scrollTriggerConfig,
       });
 
-      // Animate from hero back to navbar
+      // Animate from hero back to navbar with mobile optimizations
       tl.to(logoRef.current, {
         y: 0,
         scale: 1,
         duration: 1,
-        ease: "power2.out",
+        ease: isMobile ? "power1.out" : "power2.out", // Simpler easing for mobile
+        force3D: true, // GPU acceleration
+        willChange: isMobile ? "transform" : "auto",
       }).to(
         logoRef.current,
         {
@@ -167,15 +181,29 @@ export default function Navbar() {
     // Setup initial animation
     setupAnimation();
 
-    // Handle window resize
+    // Handle window resize with mobile optimization
     let resizeTimeout: NodeJS.Timeout;
+    let isResizing = false;
+
     const handleResize = () => {
-      // Debounce resize events
+      if (isResizing) return; // Prevent multiple resize calls
+
+      // Debounce resize events - longer delay for mobile
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(setupAnimation, 150);
+      const delay = window.innerWidth < 768 ? 300 : 150;
+
+      resizeTimeout = setTimeout(() => {
+        isResizing = true;
+
+        // Use requestAnimationFrame for smoother mobile performance
+        requestAnimationFrame(() => {
+          setupAnimation();
+          isResizing = false;
+        });
+      }, delay);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     // Cleanup
     return () => {
@@ -327,7 +355,11 @@ export default function Navbar() {
       <div
         ref={logoRef}
         className="absolute left-1/2 z-50 -translate-x-1/2 transform overflow-visible opacity-0"
-        style={{ visibility: "hidden", width: "max-content" }}
+        style={{
+          visibility: "hidden",
+          width: "max-content",
+          willChange: "transform", // Optimize for mobile animations
+        }}
       >
         <Link
           href="/"
