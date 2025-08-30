@@ -10,17 +10,19 @@ type Product = {
   handle: string;
   description: string;
   price?: number;
-  images:
-    | { edges?: { node: { url: string } }[]; url?: string }[]
-    | { edges: { node: { url: string } }[] };
-  variants?: {
-    edges?: {
-      node: { id: string; title: string; price: { amount: string } };
-    }[];
-    id?: string;
-    title?: string;
-    price?: { amount: string } | number;
-  }[];
+  images: (
+    | { edges: { node: { url: string } }[] }
+    | { url: string }
+    | { edges?: { node: { url: string } }[]; url?: string }
+  )[];
+  variants?: (
+    | {
+        edges: {
+          node: { id: string; title: string; price: { amount: string } };
+        }[];
+      }
+    | { id: string; title: string; price: { amount: string } | number }
+  )[];
   priceRange?: { minVariantPrice: { amount: string } };
 };
 
@@ -122,41 +124,52 @@ export default function ProductQuickView({
     onClose();
   };
 
+  // Type guard to check if image has edges structure
+  const hasImageEdgesStructure = (
+    image: any,
+  ): image is { edges: { node: { url: string } }[] } => {
+    return (
+      "edges" in image && Array.isArray(image.edges) && image.edges.length > 0
+    );
+  };
+
+  // Type guard to check if image has direct url
+  const hasImageUrl = (image: any): image is { url: string } => {
+    return "url" in image && typeof image.url === "string";
+  };
+
   const getProductImage = (index?: number) => {
     console.log("Product images:", product.images);
     console.log("Current index:", index);
     console.log("Product:", product);
 
+    if (!product.images || !Array.isArray(product.images)) {
+      return null;
+    }
+
     // Handle Shopify's actual structure: images.edges is an array of node objects
-    if (product.images?.edges && Array.isArray(product.images.edges)) {
-      if (index !== undefined && product.images.edges[index]) {
-        return product.images.edges[index].node.url;
+    if (index !== undefined && product.images[index]) {
+      const image = product.images[index];
+
+      if (hasImageEdgesStructure(image)) {
+        return image.edges[0]?.node?.url || null;
       }
-      // Fallback to first image
-      if (product.images.edges[0]) {
-        return product.images.edges[0].node.url;
+
+      if (hasImageUrl(image)) {
+        return image.url;
       }
     }
 
-    // Handle demo product structure: images is an array of objects with url
-    if (Array.isArray(product.images)) {
-      if (index !== undefined && product.images[index]) {
-        if (product.images[index].url) {
-          return product.images[index].url;
-        }
-        if (product.images[index].edges?.[0]?.node?.url) {
-          return product.images[index].edges[0].node.url;
-        }
+    // Fallback to first image
+    if (product.images.length > 0) {
+      const firstImage = product.images[0];
+
+      if (hasImageEdgesStructure(firstImage)) {
+        return firstImage.edges[0]?.node?.url || null;
       }
 
-      // Fallback to first image
-      if (product.images[0]) {
-        if (product.images[0].url) {
-          return product.images[0].url;
-        }
-        if (product.images[0].edges?.[0]?.node?.url) {
-          return product.images[0].edges[0].node.url;
-        }
+      if (hasImageUrl(firstImage)) {
+        return firstImage.url;
       }
     }
 
@@ -242,15 +255,24 @@ export default function ProductQuickView({
                     // Handle both Shopify and demo image structures for thumbnails
                     let imageArray: any[] = [];
 
-                    if (
-                      product.images?.edges &&
-                      Array.isArray(product.images.edges)
-                    ) {
-                      // Shopify structure
-                      imageArray = product.images.edges;
-                    } else if (Array.isArray(product.images)) {
-                      // Demo structure
-                      imageArray = product.images;
+                    if (Array.isArray(product.images)) {
+                      // Check if first image has edges structure
+                      if (
+                        product.images.length > 0 &&
+                        hasImageEdgesStructure(product.images[0])
+                      ) {
+                        // Shopify structure - extract nodes from edges
+                        imageArray = product.images
+                          .map((img) =>
+                            hasImageEdgesStructure(img)
+                              ? img.edges[0]?.node
+                              : null,
+                          )
+                          .filter(Boolean);
+                      } else {
+                        // Demo structure - use images directly
+                        imageArray = product.images;
+                      }
                     }
 
                     if (imageArray.length > 1) {
