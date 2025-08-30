@@ -18,7 +18,7 @@ export default function ShopPage() {
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "",
-    priceRange: [0, 500],
+    priceRange: [0, 1000], // Start with a higher default to show more products initially
     sortBy: "newest",
     vendor: "",
   });
@@ -26,6 +26,7 @@ export default function ShopPage() {
   const [vendors, setVendors] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState(500);
+  const [isLoading, setIsLoading] = useState(true);
   const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
 
@@ -61,9 +62,11 @@ export default function ShopPage() {
           ...prev,
           priceRange: [0, Math.ceil(maxProductPrice)],
         }));
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Failed to fetch products:", error);
+        setIsLoading(false);
       });
   }, []);
 
@@ -88,24 +91,42 @@ export default function ShopPage() {
         </p>
       </div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div className="mb-8 flex items-center justify-center py-8">
+          <div className="text-gray-500">Loading filters...</div>
+        </div>
+      )}
+
       {/* Advanced Search & Filtering */}
-      <SearchAndFilter
-        onFiltersChange={handleFiltersChange}
-        categories={categories}
-        vendors={vendors}
-        maxPrice={maxPrice}
-      />
+      {!isLoading && (
+        <SearchAndFilter
+          onFiltersChange={handleFiltersChange}
+          categories={categories}
+          vendors={vendors}
+          maxPrice={maxPrice}
+        />
+      )}
 
       {/* Products Grid with Enhanced Features */}
-      <SmoothInfiniteScroll
-        search={filters.search}
-        minPrice={filters.priceRange[0].toString()}
-        maxPrice={filters.priceRange[1].toString()}
-        vendor={filters.vendor}
-        availability="all"
-        sortBy={filters.sortBy}
-        onQuickView={handleQuickView}
-      />
+      {!isLoading && (
+        <SmoothInfiniteScroll
+          search={filters.search}
+          minPrice={filters.priceRange[0].toString()}
+          maxPrice={filters.priceRange[1].toString()}
+          vendor={filters.vendor}
+          availability="all"
+          sortBy={filters.sortBy}
+          onQuickView={handleQuickView}
+        />
+      )}
+
+      {/* Loading Products */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-16">
+          <div className="text-gray-500">Loading products...</div>
+        </div>
+      )}
 
       {/* Recently Viewed Products */}
       <RecentlyViewed />

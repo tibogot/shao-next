@@ -31,6 +31,14 @@ export default function SearchAndFilter({
     vendor: "",
   });
 
+  // Update price range when maxPrice changes (after products are fetched)
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      priceRange: [0, maxPrice],
+    }));
+  }, [maxPrice]);
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Debounced search effect
@@ -225,4 +233,3 @@ export default function SearchAndFilter({
     </div>
   );
 }
-

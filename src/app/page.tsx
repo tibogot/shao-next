@@ -33,10 +33,11 @@ export default function Home() {
         <Image
           src="/hero-1.webp"
           alt="Hero"
-          width={1000}
-          height={1000}
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          className="object-cover"
+          sizes="100vw"
           priority
+          quality={85}
         />
 
         {/* No more hero logo - we'll use the navbar logo instead */}
@@ -76,10 +77,15 @@ export default function Home() {
           <button className="mt-8 underline">Shop now </button>
         </div>
         <div className="md:w-1/2">
-          <img
+          <Image
             src="/side1.webp"
             alt="Future skincare"
+            width={800}
+            height={650}
             className="h-[650px] w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={false}
+            style={{ height: "auto" }}
           />
         </div>
       </section>
@@ -109,10 +115,15 @@ export default function Home() {
           </p>
         </div>
         <div className="md:w-1/2">
-          <img
+          <Image
             src="/hero.webp"
             alt="Future skincare"
+            width={800}
+            height={600}
             className="w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={false}
+            style={{ height: "auto" }}
           />
         </div>
       </section>
@@ -121,10 +132,11 @@ export default function Home() {
         <Image
           src="/hero-1.webp"
           alt="Hero"
-          width={1000}
-          height={1000}
-          className="absolute inset-0 h-full w-full object-cover"
-          priority
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+          quality={85}
         />
       </section>
       <Press />
@@ -144,9 +156,11 @@ export default function Home() {
         <Image
           src="/lastimg.webp"
           alt="Future skincare"
-          width={1000}
-          height={1000}
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+          quality={85}
         />
       </section>
     </main>
