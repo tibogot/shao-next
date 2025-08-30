@@ -28,6 +28,36 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const logoRef = useRef<HTMLDivElement>(null);
 
+  // Handle scroll blocking when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Block scroll when menu is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore scroll when menu closes
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to ensure scroll is restored
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
+  // Close mobile menu on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isMobileMenuOpen]);
+
   // Get authentication state
   const { session, isAuthenticated } = useAuth();
 
@@ -493,7 +523,7 @@ export default function Navbar() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <motion.div
-              className="fixed top-0 left-0 h-svh w-full max-w-sm bg-white/95 shadow-2xl backdrop-blur-lg"
+              className="fixed top-0 left-0 h-svh w-full bg-white shadow-2xl"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
