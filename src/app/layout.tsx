@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import LenisProvider from "../components/LenisProvider";
 import { ScrollToTop } from "../components/ScrollToTop";
+import Providers from "../components/Providers";
 
 const neueMontreal = localFont({
   src: [
@@ -48,13 +49,15 @@ export default function RootLayout({
         suppressHydrationWarning
         className={` ${neueMontreal.variable} ${neueMontrealMono.variable} antialiased`}
       >
-        <LenisProvider>
-          <ScrollToTop />
-          <CartDrawer />
-          <Navbar />
-          {children}
-          <Footer />
-        </LenisProvider>
+        <Providers>
+          <LenisProvider>
+            <ScrollToTop />
+            <CartDrawer />
+            <Navbar />
+            {children}
+            <Footer />
+          </LenisProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -7,6 +7,7 @@ import LatestProducts from "../components/LatestProducts";
 import HydrogenProducts from "../components/HydrogenProducts";
 import FAQ from "@/components/FAQ";
 import Press from "@/components/Press";
+import RecentlyViewed from "../components/RecentlyViewed";
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,6 +61,7 @@ export default function Home() {
         </p>
       </section>
       <LatestProducts />
+      <RecentlyViewed />
       <section className="flex flex-col gap-6 px-4 py-12 md:flex-row md:gap-8 md:px-8 md:py-16">
         <div className="md:w-1/2">
           <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">

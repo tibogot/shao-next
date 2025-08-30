@@ -7,6 +7,8 @@ import { motion, useScroll, useMotionValueEvent } from "motion/react";
 import { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Wishlist from "./Wishlist";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -18,6 +20,9 @@ export default function Navbar() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const logoRef = useRef<HTMLDivElement>(null);
+
+  // Get authentication state
+  const { session, isAuthenticated } = useAuth();
 
   // Reset states when navigating to home page
   useEffect(() => {
@@ -86,10 +91,6 @@ export default function Navbar() {
       const viewportWidth = window.innerWidth;
       const isMobile = viewportWidth < 768;
 
-      // Detect if device supports touch (better mobile detection)
-      const isTouchDevice =
-        "ontouchstart" in window || navigator.maxTouchPoints > 0;
-
       // Calculate how far to move logo to center of screen
       const heroY = viewportHeight / 2; // Center of viewport
       const navbarCenter =
@@ -116,8 +117,8 @@ export default function Navbar() {
 
       // Set minimum scale and cap at safe maximum
       const heroScale = Math.max(
-        isMobile ? 4 : 6,
-        Math.min(maxSafeScale, isMobile ? 12 : 16),
+        isMobile ? 2 : 2.5,
+        Math.min(maxSafeScale, isMobile ? 5 : 6),
       );
 
       // Kill existing ScrollTriggers
@@ -130,126 +131,56 @@ export default function Navbar() {
         filter: "brightness(1)", // White for hero
         opacity: 1,
         visibility: "visible",
-        // Mobile performance optimizations
-        force3D: true, // Force GPU acceleration
-        willChange: isMobile ? "transform" : "auto", // Optimize for mobile transforms
       });
 
-      // Different approach for touch devices vs desktop
-      if (isTouchDevice && isMobile) {
-        // Mobile/touch: Use simpler, throttled animation
-        let ticking = false;
-
-        ScrollTrigger.create({
+      // Create timeline to animate back to navbar position
+      const tl = gsap.timeline({
+        scrollTrigger: {
           trigger: "body",
           start: "top top",
-          end: `top -${viewportHeight * 0.6}px`, // Shorter range for mobile
-          onUpdate: (self) => {
-            if (!ticking) {
-              ticking = true;
-              const progress = self.progress;
-
-              // Use requestAnimationFrame to throttle updates on mobile
-              requestAnimationFrame(() => {
-                if (!logoRef.current) {
-                  ticking = false;
-                  return;
-                }
-
-                // Smooth interpolation for mobile with easing
-                const easedProgress =
-                  progress < 0.5
-                    ? 2 * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 2) / 2; // easeInOutQuad
-
-                const currentY = distanceToHero * (1 - easedProgress);
-                const currentScale =
-                  heroScale + (1 - heroScale) * easedProgress;
-                const brightness = easedProgress > 0.8 ? 0 : 1;
-
-                gsap.set(logoRef.current, {
-                  y: currentY,
-                  scale: currentScale,
-                  filter: `brightness(${brightness})`,
-                  force3D: true,
-                });
-
-                ticking = false;
-              });
-            }
-          },
-          refreshPriority: -1,
-          invalidateOnRefresh: false,
-        });
-      } else {
-        // Desktop: Use smooth scrubbed animation
-        const scrollTriggerConfig = {
-          trigger: "body",
-          start: "top top",
-          end: `top -${viewportHeight * 0.8}px`,
+          end: `top -${viewportHeight * 0.8}px`, // End at 80% of viewport
           scrub: 1.2,
-          ease: "power2.out",
           // @ts-ignore
           onComplete: () => {
+            // Ensure final state
             gsap.set(logoRef.current, {
               y: 0,
               scale: 1,
-              filter: "brightness(0)",
+              filter: "brightness(0)", // Black for navbar
             });
           },
-        };
+        },
+      });
 
-        const tl = gsap.timeline({
-          scrollTrigger: scrollTriggerConfig,
-        });
-
-        tl.to(logoRef.current, {
-          y: 0,
-          scale: 1,
-          duration: 1,
-          ease: "power2.out",
-          force3D: true,
-        }).to(
-          logoRef.current,
-          {
-            filter: "brightness(0)",
-            duration: 0.1,
-            ease: "none",
-          },
-          0.9,
-        );
-      }
+      // Animate from hero back to navbar
+      tl.to(logoRef.current, {
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: "power2.out",
+      }).to(
+        logoRef.current,
+        {
+          filter: "brightness(0)", // Change to black
+          duration: 0.1,
+          ease: "none",
+        },
+        0.9, // Near the end
+      );
     };
 
     // Setup initial animation
     setupAnimation();
 
-    // Handle window resize with mobile optimization
+    // Handle window resize
     let resizeTimeout: NodeJS.Timeout;
-    let isResizing = false;
-
     const handleResize = () => {
-      if (isResizing) return; // Prevent multiple resize calls
-
-      // Debounce resize events - longer delay for mobile
+      // Debounce resize events
       clearTimeout(resizeTimeout);
-      const currentIsMobile = window.innerWidth < 768;
-      const currentIsTouchDevice =
-        "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      const delay = currentIsMobile && currentIsTouchDevice ? 500 : 150; // Even longer for touch mobile
-
-      resizeTimeout = setTimeout(() => {
-        isResizing = true;
-
-        // Use requestAnimationFrame for smoother mobile performance
-        requestAnimationFrame(() => {
-          setupAnimation();
-          isResizing = false;
-        });
-      }, delay);
+      resizeTimeout = setTimeout(setupAnimation, 150);
     };
 
-    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
@@ -387,12 +318,12 @@ export default function Navbar() {
           transition={{ duration: 0.3 }}
         >
           <Link
-            href="/bout2.tsx"
+            href="/demo"
             className={`font-neue-montreal-mono cursor-pointer text-sm transition-colors ${
               isScrolled ? "hover:text-black/60" : "hover:text-white/60"
             }`}
           >
-            BOUT2
+            DEMO
           </Link>
         </motion.div>
       </div>
@@ -400,20 +331,16 @@ export default function Navbar() {
       {/* Center - Logo with GSAP animation */}
       <div
         ref={logoRef}
-        className="absolute left-1/2 z-50 -translate-x-1/2 transform overflow-visible opacity-0"
-        style={{
-          visibility: "hidden",
-          width: "max-content",
-          willChange: "transform", // Optimize for mobile animations
-        }}
+        className="pointer-events-none absolute left-1/2 z-40 -translate-x-1/2 transform overflow-visible opacity-0"
+        style={{ visibility: "hidden", width: "max-content" }}
       >
         <Link
           href="/"
-          className="flex cursor-pointer items-center overflow-visible"
+          className="pointer-events-auto flex cursor-pointer items-center overflow-visible"
         >
           <div
             className="flex items-center justify-center overflow-visible"
-            style={{ minWidth: "200px", minHeight: "200px" }}
+            style={{ width: "116px", height: "39px" }}
           >
             <Image
               src="/logo.svg"
@@ -467,15 +394,40 @@ export default function Navbar() {
           }}
           transition={{ duration: 0.3 }}
         >
-          <Link
-            href="/account"
-            className={`font-neue-montreal-mono cursor-pointer text-sm transition-colors ${
-              isScrolled ? "hover:text-black/60" : "hover:text-white/60"
-            }`}
-            aria-label="Account"
-          >
-            ACCOUNT
-          </Link>
+          <Wishlist />
+        </motion.div>
+        {/* Account Section - Shows different content based on auth status */}
+        <motion.div
+          className="hidden md:block"
+          animate={{
+            color: isScrolled ? "#000000" : "#ffffff",
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          {isAuthenticated ? (
+            <Link
+              href="/account"
+              className={`font-neue-montreal-mono cursor-pointer text-sm transition-colors ${
+                isScrolled ? "hover:text-black/60" : "hover:text-white/60"
+              }`}
+              aria-label="Account"
+            >
+              Hi,{" "}
+              {session?.user?.name ||
+                session?.user?.email?.split("@")[0] ||
+                "User"}
+            </Link>
+          ) : (
+            <Link
+              href="/auth/signin"
+              className={`font-neue-montreal-mono cursor-pointer text-sm transition-colors ${
+                isScrolled ? "hover:text-black/60" : "hover:text-white/60"
+              }`}
+              aria-label="Sign In"
+            >
+              SIGN IN
+            </Link>
+          )}
         </motion.div>
         <motion.button
           type="button"
@@ -543,11 +495,11 @@ export default function Navbar() {
               FLIP-TEST
             </Link>
             <Link
-              href="/bout2.tsx"
+              href="/demo"
               className="font-neue-montreal-mono cursor-pointer text-lg text-white transition-colors hover:text-white/60"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              BOUT2
+              DEMO
             </Link>
           </motion.div>
 
@@ -567,13 +519,35 @@ export default function Navbar() {
             >
               SEARCH
             </button>
-            <Link
-              href="/account"
+            <button
+              type="button"
               className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={openCart}
+              aria-label="Open cart"
             >
-              ACCOUNT
-            </Link>
+              CART({items.length})
+            </button>
+            {/* Mobile Account Section */}
+            {isAuthenticated ? (
+              <Link
+                href="/account"
+                className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Hi,{" "}
+                {session?.user?.name ||
+                  session?.user?.email?.split("@")[0] ||
+                  "User"}
+              </Link>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                SIGN IN
+              </Link>
+            )}
           </motion.div>
         </div>
       </motion.div>

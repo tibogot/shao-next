@@ -24,7 +24,7 @@ export async function fetchProducts(limit = 4) {
 
   const query = `
     {
-      products(first: ${limit}) {
+      products(first: ${limit}, sortKey: CREATED_AT, reverse: true) {
         edges {
           node {
             id
@@ -60,7 +60,7 @@ export async function fetchAllProducts(pageSize = 12, cursor?: string) {
 
   const query = `
     {
-      products(first: ${pageSize}${cursor ? `, after: \"${cursor}\"` : ""}) {
+      products(first: ${pageSize}${cursor ? `, after: \"${cursor}\"` : ""}, sortKey: CREATED_AT, reverse: true) {
         pageInfo { hasNextPage, endCursor }
         edges {
           node {

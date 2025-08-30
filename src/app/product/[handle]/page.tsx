@@ -87,6 +87,32 @@ export default function ProductPage() {
   const addToCart = useCartStore((s) => s.addToCart);
   const openCart = useCartStore((s) => s.openCart);
 
+  // Add to wishlist function
+  const addToWishlist = () => {
+    if (product && (window as any).addToWishlist) {
+      (window as any).addToWishlist({
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        image: product.images.edges[0]?.node.url || "",
+        price: parseFloat(product.priceRange.minVariantPrice.amount),
+      });
+    }
+  };
+
+  // Add to recently viewed function
+  const addToRecentlyViewed = () => {
+    if (product && (window as any).addToRecentlyViewed) {
+      (window as any).addToRecentlyViewed({
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        image: product.images.edges[0]?.node.url || "",
+        price: parseFloat(product.priceRange.minVariantPrice.amount),
+      });
+    }
+  };
+
   useEffect(() => {
     if (!handle) return;
     setLoading(true);
@@ -115,6 +141,9 @@ export default function ProductPage() {
           productData.tags,
           productData.vendor,
         ).then(setRelatedProducts);
+
+        // Add to recently viewed
+        setTimeout(() => addToRecentlyViewed(), 100);
       }
       setLoading(false);
     });
@@ -375,6 +404,26 @@ export default function ProductPage() {
                 ? "Add to Cart"
                 : "Out of Stock"}
             </motion.button>
+
+            {/* Action Buttons */}
+            <div className="mt-4 flex gap-3">
+              <motion.button
+                onClick={addToWishlist}
+                className="flex-1 rounded-lg border border-gray-300 py-3 text-sm font-medium text-gray-700 transition-all hover:border-black hover:text-black"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                ❤️ Add to Wishlist
+              </motion.button>
+              <motion.button
+                onClick={addToRecentlyViewed}
+                className="flex-1 rounded-lg border border-gray-300 py-3 text-sm font-medium text-gray-700 transition-all hover:border-black hover:text-black"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                👁️ Recently Viewed
+              </motion.button>
+            </div>
 
             {/* Product Details Tabs */}
             <div className="border-t pt-6">

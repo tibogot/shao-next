@@ -43,31 +43,145 @@ function ProductSkeleton({ delay = 0 }: { delay?: number }) {
 function ProductCard({
   product,
   delay = 0,
+  onQuickView,
 }: {
   product: Product;
   delay?: number;
+  onQuickView?: (product: Product) => void;
 }) {
+  const [isInWishlist, setIsInWishlist] = useState(false);
+
+  // Check if product is in wishlist on mount and when wishlist changes
+  useEffect(() => {
+    const checkWishlistStatus = () => {
+      if ((window as any).isInWishlist) {
+        setIsInWishlist((window as any).isInWishlist(product.id));
+      }
+    };
+
+    checkWishlistStatus();
+
+    // Listen for wishlist changes
+    const handleWishlistChange = () => {
+      checkWishlistStatus();
+    };
+
+    window.addEventListener("storage", handleWishlistChange);
+    return () => window.removeEventListener("storage", handleWishlistChange);
+  }, [product.id]);
+
+  const handleWishlist = () => {
+    if ((window as any).addToWishlist) {
+      (window as any).addToWishlist({
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        image: product.images.edges[0]?.node.url || "",
+        price: parseFloat(product.priceRange.minVariantPrice.amount),
+      });
+      // Update local state immediately
+      setIsInWishlist(!isInWishlist);
+    }
+  };
+
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onQuickView) {
+      onQuickView(product);
+    }
+  };
+
+  const handleProductView = () => {
+    if ((window as any).addToRecentlyViewed) {
+      (window as any).addToRecentlyViewed({
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        image: product.images.edges[0]?.node.url || "",
+        price: parseFloat(product.priceRange.minVariantPrice.amount),
+      });
+    }
+  };
+
   return (
-    <Link
-      href={`/product/${product.handle}`}
-      className="block min-h-[450px] rounded-sm"
-    >
-      <img
-        src={product.images.edges[0]?.node.url}
-        alt={product.title}
-        className="mb-2 h-[450px] w-full rounded object-cover"
-        loading="lazy"
-      />
-      <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
-        {product.title}
+    <div className="group relative block min-h-[450px] rounded-sm">
+      <Link
+        href={`/product/${product.handle}`}
+        className="block"
+        onClick={handleProductView}
+      >
+        <img
+          src={product.images.edges[0]?.node.url}
+          alt={product.title}
+          className="mb-2 h-[450px] w-full rounded object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+        <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+          {product.title}
+        </div>
+        <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+          {product.description}
+        </div>
+        <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+          {formatEuroPrice(product.priceRange.minVariantPrice.amount)}
+        </div>
+      </Link>
+
+      {/* Action Buttons */}
+      <div className="absolute top-4 right-4 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <button
+          onClick={handleWishlist}
+          className={`rounded-full p-2 shadow-lg backdrop-blur-sm transition-all hover:scale-110 ${
+            isInWishlist
+              ? "bg-red-500 text-white"
+              : "bg-white/90 text-gray-700 hover:bg-white"
+          }`}
+          title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+        >
+          <svg
+            className="h-5 w-5"
+            fill={isInWishlist ? "currentColor" : "none"}
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={isInWishlist ? 0 : 2}
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
+          </svg>
+        </button>
+        {onQuickView && (
+          <button
+            onClick={handleQuickView}
+            className="rounded-full bg-white/90 p-2 shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-white"
+            title="Quick View"
+          >
+            <svg
+              className="h-5 w-5 text-gray-700"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+          </button>
+        )}
       </div>
-      <div className="mt-4 line-clamp-3 text-lg text-gray-600">
-        {product.description}
-      </div>
-      <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
-        {formatEuroPrice(product.priceRange.minVariantPrice.amount)}
-      </div>
-    </Link>
+    </div>
   );
 }
 
@@ -78,6 +192,7 @@ interface SmoothInfiniteScrollProps {
   vendor: string;
   availability: string;
   sortBy: string;
+  onQuickView?: (product: Product) => void;
 }
 
 export default function SmoothInfiniteScroll({
@@ -87,6 +202,7 @@ export default function SmoothInfiniteScroll({
   vendor,
   availability,
   sortBy,
+  onQuickView,
 }: SmoothInfiniteScrollProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [filtered, setFiltered] = useState<Product[]>([]);
@@ -295,6 +411,7 @@ export default function SmoothInfiniteScroll({
             key={product.id}
             product={product}
             delay={index < 12 ? 0 : (index - 12) * 30} // Stagger new items
+            onQuickView={onQuickView}
           />
         ))}
 
