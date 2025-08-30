@@ -72,6 +72,22 @@ export default function Wishlist() {
     (window as any).getWishlistItems = () => wishlistItems;
   }, [wishlistItems]);
 
+  // Handle scroll blocking when wishlist is open
+  useEffect(() => {
+    if (isOpen) {
+      // Block scroll when wishlist is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore scroll when wishlist closes
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to ensure scroll is restored
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   return (
     <>
       {/* Wishlist Button */}

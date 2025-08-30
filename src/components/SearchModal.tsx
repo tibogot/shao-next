@@ -32,7 +32,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     }
   }, [isOpen]);
 
-  // Close on escape key
+  // Close on escape key and handle scroll blocking
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -41,8 +41,17 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     };
 
     if (isOpen) {
+      // Block scroll when modal is open
+      document.body.style.overflow = "hidden";
       document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        // Restore scroll when modal closes
+        document.body.style.overflow = "unset";
+      };
+    } else {
+      // Ensure scroll is restored when modal closes
+      document.body.style.overflow = "unset";
     }
   }, [isOpen, onClose]);
 

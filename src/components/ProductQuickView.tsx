@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useCartStore } from "../store/cartStore";
 import Link from "next/link";
@@ -98,6 +98,22 @@ export default function ProductQuickView({
 
   const selectedVariantPrice = getVariantPrice(selectedVariantData);
   const selectedVariantId = getVariantId(selectedVariantData);
+
+  // Handle scroll blocking when quick view is open
+  useEffect(() => {
+    if (isOpen) {
+      // Block scroll when quick view is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore scroll when quick view closes
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to ensure scroll is restored
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
   const selectedVariantTitle = getVariantTitle(selectedVariantData);
 
   const handleAddToCart = () => {

@@ -1,7 +1,7 @@
 "use client";
 import { useCartStore } from "../store/cartStore";
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function EnhancedCart() {
   const {
@@ -43,6 +43,22 @@ export default function EnhancedCart() {
   );
   const shipping = subtotal > 50 ? 0 : 5.99; // Free shipping over €50
   const total = subtotal + shipping;
+
+  // Handle scroll blocking when cart is open
+  useEffect(() => {
+    if (isCartOpen) {
+      // Block scroll when cart is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore scroll when cart closes
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to ensure scroll is restored
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isCartOpen]);
 
   if (!isCartOpen) return null;
 
