@@ -3,12 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "../store/cartStore";
-import { motion, useScroll, useMotionValueEvent } from "motion/react";
+import {
+  motion,
+  useScroll,
+  useMotionValueEvent,
+  AnimatePresence,
+} from "motion/react";
 import { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Wishlist from "./Wishlist";
 import { useAuth } from "../contexts/AuthContext";
+import SearchModal from "./SearchModal";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -19,6 +25,7 @@ export default function Navbar() {
   const [isNavbarReady, setIsNavbarReady] = useState(false); // Track when navbar should be visible
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const logoRef = useRef<HTMLDivElement>(null);
 
   // Get authentication state
@@ -412,6 +419,7 @@ export default function Navbar() {
             isScrolled ? "hover:text-black/60" : "hover:text-white/60"
           }`}
           aria-label="Search"
+          onClick={() => setIsSearchOpen(true)}
           animate={{
             color: isScrolled ? "#000000" : "#ffffff",
           }}
@@ -478,111 +486,141 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu Overlay */}
-      <motion.div
-        className="fixed inset-0 top-16 z-30 bg-black/95 backdrop-blur-lg md:hidden"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{
-          opacity: isMobileMenuOpen ? 1 : 0,
-          y: isMobileMenuOpen ? 0 : -20,
-          pointerEvents: isMobileMenuOpen ? "auto" : "none",
-        }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
-        <div className="flex flex-col items-center justify-center space-y-8 pt-16">
-          <motion.div
-            className="flex flex-col items-center space-y-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: isMobileMenuOpen ? 1 : 0,
-              y: isMobileMenuOpen ? 0 : 20,
-            }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/30"
+            onClick={() => setIsMobileMenuOpen(false)}
           >
-            <Link
-              href="/shop"
-              className="font-neue-montreal-mono cursor-pointer text-lg text-white transition-colors hover:text-white/60"
-              onClick={() => setIsMobileMenuOpen(false)}
+            <motion.div
+              className="fixed top-0 left-0 h-svh w-full max-w-sm bg-white/95 shadow-2xl backdrop-blur-lg"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              onClick={(e) => e.stopPropagation()}
             >
-              SHOP
-            </Link>
-            <Link
-              href="/collection"
-              className="font-neue-montreal-mono cursor-pointer text-lg text-white transition-colors hover:text-white/60"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              COLLECTION
-            </Link>
-            <Link
-              href="/about"
-              className="font-neue-montreal-mono cursor-pointer text-lg text-white transition-colors hover:text-white/60"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              ABOUT US
-            </Link>
-            <Link
-              href="/flip-test"
-              className="font-neue-montreal-mono cursor-pointer text-lg text-white transition-colors hover:text-white/60"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              FLIP-TEST
-            </Link>
-            <Link
-              href="/demo"
-              className="font-neue-montreal-mono cursor-pointer text-lg text-white transition-colors hover:text-white/60"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              DEMO
-            </Link>
-          </motion.div>
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-gray-200 p-6">
+                <h2 className="text-xl font-semibold text-black">Menu</h2>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="rounded-full p-2 transition-colors hover:bg-gray-100"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-          <motion.div
-            className="flex flex-col items-center space-y-4 pt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: isMobileMenuOpen ? 1 : 0,
-              y: isMobileMenuOpen ? 0 : 20,
-            }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-          >
-            <button
-              type="button"
-              className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
-              aria-label="Search"
-            >
-              SEARCH
-            </button>
-            <button
-              type="button"
-              className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
-              onClick={openCart}
-              aria-label="Open cart"
-            >
-              CART({items.length})
-            </button>
-            {/* Mobile Account Section */}
-            {isAuthenticated ? (
-              <Link
-                href="/account"
-                className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Hi,{" "}
-                {session?.user?.name ||
-                  session?.user?.email?.split("@")[0] ||
-                  "User"}
-              </Link>
-            ) : (
-              <Link
-                href="/auth/signin"
-                className="font-neue-montreal-mono cursor-pointer text-base text-white/70 transition-colors hover:text-white"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                SIGN IN
-              </Link>
-            )}
-          </motion.div>
-        </div>
-      </motion.div>
+              {/* Menu Content */}
+              <div className="flex flex-col p-6">
+                {/* Navigation Links */}
+                <div className="mb-8 space-y-6">
+                  <Link
+                    href="/shop"
+                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    SHOP
+                  </Link>
+                  <Link
+                    href="/collection"
+                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    COLLECTION
+                  </Link>
+                  <Link
+                    href="/about"
+                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    ABOUT US
+                  </Link>
+                  <Link
+                    href="/flip-test"
+                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    FLIP-TEST
+                  </Link>
+                  <Link
+                    href="/demo"
+                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    DEMO
+                  </Link>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="space-y-4 border-t border-gray-200 pt-6">
+                  <button
+                    type="button"
+                    className="font-neue-montreal-mono block w-full text-left text-base text-black/70 transition-colors hover:text-black"
+                    aria-label="Search"
+                    onClick={() => {
+                      setIsSearchOpen(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    SEARCH
+                  </button>
+                  <button
+                    type="button"
+                    className="font-neue-montreal-mono block w-full text-left text-base text-black/70 transition-colors hover:text-black"
+                    onClick={() => {
+                      openCart();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    aria-label="Open cart"
+                  >
+                    CART({items.length})
+                  </button>
+                  {/* Mobile Account Section */}
+                  {isAuthenticated ? (
+                    <Link
+                      href="/account"
+                      className="font-neue-montreal-mono block text-base text-black/70 transition-colors hover:text-black"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Hi,{" "}
+                      {session?.user?.name ||
+                        session?.user?.email?.split("@")[0] ||
+                        "User"}
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/auth/signin"
+                      className="font-neue-montreal-mono block text-base text-black/70 transition-colors hover:text-black"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      SIGN IN
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </motion.nav>
   );
 }
