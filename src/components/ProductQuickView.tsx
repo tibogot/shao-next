@@ -221,7 +221,7 @@ export default function ProductQuickView({
                 <h2 className="text-2xl font-semibold">Quick View</h2>
                 <button
                   onClick={onClose}
-                  className="rounded-full p-2 hover:bg-gray-100"
+                  className="cursor-pointer rounded-full p-2 hover:bg-gray-100"
                 >
                   <svg
                     className="h-6 w-6"
@@ -369,7 +369,7 @@ export default function ProductQuickView({
                           <button
                             key={getVariantId(variant)}
                             onClick={() => setSelectedVariant(index)}
-                            className={`rounded-md border px-4 py-2 text-sm transition-colors ${
+                            className={`cursor-pointer rounded-md border px-4 py-2 text-sm transition-colors ${
                               selectedVariant === index
                                 ? "border-black bg-black text-white"
                                 : "border-gray-300 text-gray-700 hover:border-gray-400"
@@ -390,7 +390,7 @@ export default function ProductQuickView({
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="rounded-full p-1 hover:bg-gray-100"
+                        className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
                       >
                         <svg
                           className="h-4 w-4"
@@ -411,7 +411,7 @@ export default function ProductQuickView({
                       </span>
                       <button
                         onClick={() => setQuantity(quantity + 1)}
-                        className="rounded-full p-1 hover:bg-gray-100"
+                        className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
                       >
                         <svg
                           className="h-4 w-4"
@@ -434,7 +434,7 @@ export default function ProductQuickView({
                   <div className="space-y-3">
                     <button
                       onClick={handleAddToCart}
-                      className="w-full rounded-lg bg-black px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800"
+                      className="w-full cursor-pointer rounded-lg bg-black px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800"
                     >
                       Add to Cart - €
                       {(selectedVariantPrice * quantity).toFixed(2)}

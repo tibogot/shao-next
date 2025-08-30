@@ -95,7 +95,7 @@ export default function Wishlist() {
       {/* Wishlist Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="relative rounded-full p-2 transition-colors hover:bg-gray-100"
+        className="relative cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-100"
         aria-label="Wishlist"
       >
         <svg
@@ -144,7 +144,7 @@ export default function Wishlist() {
                   </h2>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="rounded-full p-2 hover:bg-gray-100"
+                    className="cursor-pointer rounded-full p-2 hover:bg-gray-100"
                   >
                     <svg
                       className="h-6 w-6"

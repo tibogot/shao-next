@@ -159,7 +159,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               </div>
               <button
                 onClick={handleClose}
-                className="ml-3 rounded-full p-2 transition-colors hover:bg-gray-100"
+                className="ml-3 cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-100"
               >
                 <svg
                   className="h-6 w-6"

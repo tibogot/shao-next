@@ -93,7 +93,7 @@ export default function SearchAndFilter({
       {/* Filter Toggle */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 text-sm text-gray-600 hover:text-black"
+        className="flex cursor-pointer items-center gap-2 text-sm text-gray-600 hover:text-black"
       >
         <span>Filters & Sort</span>
         <svg
@@ -222,7 +222,7 @@ export default function SearchAndFilter({
             <div className="flex justify-end">
               <button
                 onClick={clearFilters}
-                className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:border-black hover:text-black"
+                className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:border-black hover:text-black"
               >
                 Clear All Filters
               </button>

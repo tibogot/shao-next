@@ -86,7 +86,7 @@ export default function EnhancedCart() {
             </h2>
             <button
               onClick={closeCart}
-              className="rounded-full p-2 hover:bg-gray-100"
+              className="cursor-pointer rounded-full p-2 hover:bg-gray-100"
             >
               <svg
                 className="h-6 w-6"
@@ -153,7 +153,7 @@ export default function EnhancedCart() {
                           onClick={() =>
                             handleQuantityChange(item.id, item.quantity - 1)
                           }
-                          className="rounded-full p-1 hover:bg-gray-100"
+                          className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
                         >
                           <svg
                             className="h-4 w-4"
@@ -176,7 +176,7 @@ export default function EnhancedCart() {
                           onClick={() =>
                             handleQuantityChange(item.id, item.quantity + 1)
                           }
-                          className="rounded-full p-1 hover:bg-gray-100"
+                          className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
                         >
                           <svg
                             className="h-4 w-4"
@@ -202,13 +202,13 @@ export default function EnhancedCart() {
                       <div className="flex gap-1">
                         <button
                           onClick={() => saveForLater(item)}
-                          className="rounded p-1 text-xs text-blue-600 hover:bg-blue-50"
+                          className="cursor-pointer rounded p-1 text-xs text-blue-600 hover:bg-blue-50"
                         >
                           Save
                         </button>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="rounded p-1 text-xs text-red-600 hover:bg-red-50"
+                          className="cursor-pointer rounded p-1 text-xs text-red-600 hover:bg-red-50"
                         >
                           Remove
                         </button>
@@ -242,13 +242,13 @@ export default function EnhancedCart() {
                     <div className="flex gap-1">
                       <button
                         onClick={() => moveToCart(item)}
-                        className="rounded bg-black px-2 py-1 text-xs text-white hover:bg-gray-800"
+                        className="cursor-pointer rounded bg-black px-2 py-1 text-xs text-white hover:bg-gray-800"
                       >
                         Move to Cart
                       </button>
                       <button
                         onClick={() => removeSavedItem(item.id)}
-                        className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+                        className="cursor-pointer rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
                       >
                         Remove
                       </button>
@@ -287,12 +287,12 @@ export default function EnhancedCart() {
               </div>
 
               <div className="mt-6 space-y-3">
-                <button className="w-full rounded-lg bg-black py-3 text-white transition-colors hover:bg-gray-800">
+                <button className="w-full cursor-pointer rounded-lg bg-black py-3 text-white transition-colors hover:bg-gray-800">
                   Proceed to Checkout
                 </button>
                 <button
                   onClick={clearCart}
-                  className="w-full rounded-lg border border-gray-300 py-3 text-gray-700 transition-colors hover:border-black hover:text-black"
+                  className="w-full cursor-pointer rounded-lg border border-gray-300 py-3 text-gray-700 transition-colors hover:border-black hover:text-black"
                 >
                   Clear Cart
                 </button>

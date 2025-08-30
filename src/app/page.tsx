@@ -74,7 +74,7 @@ export default function Home() {
             intention: to heal and restore skin.
           </p>
 
-          <button className="mt-8 underline">Shop now </button>
+          <button className="mt-8 cursor-pointer underline">Shop now </button>
         </div>
         <div className="md:w-1/2">
           <Image

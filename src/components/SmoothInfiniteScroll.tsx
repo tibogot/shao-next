@@ -132,7 +132,7 @@ function ProductCard({
       <div className="absolute top-4 right-4 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
         <button
           onClick={handleWishlist}
-          className={`rounded-full p-2 shadow-lg backdrop-blur-sm transition-all hover:scale-110 ${
+          className={`cursor-pointer rounded-full p-2 shadow-lg backdrop-blur-sm transition-all hover:scale-110 ${
             isInWishlist
               ? "bg-red-500 text-white"
               : "bg-white/90 text-gray-700 hover:bg-white"
@@ -156,7 +156,7 @@ function ProductCard({
         {onQuickView && (
           <button
             onClick={handleQuickView}
-            className="rounded-full bg-white/90 p-2 shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-white"
+            className="cursor-pointer rounded-full bg-white/90 p-2 shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-white"
             title="Quick View"
           >
             <svg
@@ -390,7 +390,7 @@ export default function SmoothInfiniteScroll({
           <p className="mb-4 text-red-600">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="rounded bg-black px-4 py-2 text-white hover:bg-black/80"
+            className="cursor-pointer rounded bg-black px-4 py-2 text-white hover:bg-black/80"
           >
             Retry
           </button>
