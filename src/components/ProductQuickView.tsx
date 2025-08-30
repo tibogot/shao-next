@@ -57,11 +57,32 @@ export default function ProductQuickView({
     return variant.title || variant.node?.title || "Default";
   };
 
+  // Type guard to check if variant has edges structure
+  const hasEdgesStructure = (
+    variants: any[],
+  ): variants is { edges: { node: any }[] }[] => {
+    return (
+      variants.length > 0 &&
+      "edges" in variants[0] &&
+      Array.isArray(variants[0].edges)
+    );
+  };
+
   // Get variants array (handle both Shopify edges structure and direct array)
-  const variantsArray =
-    product.variants?.edges?.map((edge: any) => edge.node) ||
-    product.variants ||
-    [];
+  const variantsArray = (() => {
+    if (product.variants && Array.isArray(product.variants)) {
+      if (hasEdgesStructure(product.variants)) {
+        // Shopify format with edges
+        return product.variants
+          .map((variant) => variant.edges[0]?.node)
+          .filter(Boolean);
+      } else {
+        // Direct array format
+        return product.variants;
+      }
+    }
+    return [];
+  })();
 
   const selectedVariantData = variantsArray[selectedVariant] || {
     id: product.id,
