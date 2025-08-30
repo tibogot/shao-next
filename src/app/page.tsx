@@ -28,7 +28,7 @@ export default function Home() {
     <main className="bg-[#FBFBFB]">
       <div
         ref={heroRef}
-        className="hero relative flex h-svh w-full items-center justify-center overflow-visible bg-purple-200 px-4 py-16 md:px-8 md:py-8"
+        className="hero relative flex h-svh w-full items-center justify-center overflow-visible px-4 py-16 md:px-8 md:py-8"
       >
         <Image
           src="/hero-1.webp"
