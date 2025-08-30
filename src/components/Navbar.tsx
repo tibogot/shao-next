@@ -618,6 +618,19 @@ export default function Navbar() {
                   >
                     CART({items.length})
                   </button>
+                  <button
+                    type="button"
+                    className="font-neue-montreal-mono block w-full text-left text-base text-black/70 transition-colors hover:text-black"
+                    onClick={() => {
+                      if ((window as any).openWishlist) {
+                        (window as any).openWishlist();
+                      }
+                      setIsMobileMenuOpen(false);
+                    }}
+                    aria-label="Open wishlist"
+                  >
+                    WISHLIST
+                  </button>
                   {/* Mobile Account Section */}
                   {isAuthenticated ? (
                     <Link

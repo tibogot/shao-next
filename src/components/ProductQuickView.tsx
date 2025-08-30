@@ -10,11 +10,9 @@ type Product = {
   handle: string;
   description: string;
   price?: number;
-  images: (
-    | { edges: { node: { url: string } }[] }
-    | { url: string }
-    | { edges?: { node: { url: string } }[]; url?: string }
-  )[];
+  images: {
+    edges: { node: { url: string } }[];
+  };
   variants?: (
     | {
         edges: {
@@ -41,6 +39,22 @@ export default function ProductQuickView({
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToCart } = useCartStore();
+
+  // Handle scroll blocking when quick view is open
+  useEffect(() => {
+    if (isOpen) {
+      // Block scroll when quick view is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore scroll when quick view closes
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to ensure scroll is restored
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   if (!product) return null;
 
@@ -98,22 +112,6 @@ export default function ProductQuickView({
 
   const selectedVariantPrice = getVariantPrice(selectedVariantData);
   const selectedVariantId = getVariantId(selectedVariantData);
-
-  // Handle scroll blocking when quick view is open
-  useEffect(() => {
-    if (isOpen) {
-      // Block scroll when quick view is open
-      document.body.style.overflow = "hidden";
-    } else {
-      // Restore scroll when quick view closes
-      document.body.style.overflow = "unset";
-    }
-
-    // Cleanup function to ensure scroll is restored
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
   const selectedVariantTitle = getVariantTitle(selectedVariantData);
 
   const handleAddToCart = () => {
@@ -159,37 +157,41 @@ export default function ProductQuickView({
     console.log("Current index:", index);
     console.log("Product:", product);
 
-    if (!product.images || !Array.isArray(product.images)) {
-      return null;
-    }
-
-    // Handle Shopify's actual structure: images.edges is an array of node objects
-    if (index !== undefined && product.images[index]) {
-      const image = product.images[index];
-
-      if (hasImageEdgesStructure(image)) {
-        return image.edges[0]?.node?.url || null;
+    // Handle Shopify's structure: product.images.edges is an array
+    if (product.images?.edges && Array.isArray(product.images.edges)) {
+      if (index !== undefined && product.images.edges[index]) {
+        return product.images.edges[index].node?.url || null;
       }
-
-      if (hasImageUrl(image)) {
-        return image.url;
+      // Fallback to first image
+      if (product.images.edges.length > 0) {
+        return product.images.edges[0].node?.url || null;
       }
     }
 
-    // Fallback to first image
-    if (product.images.length > 0) {
-      const firstImage = product.images[0];
-
-      if (hasImageEdgesStructure(firstImage)) {
-        return firstImage.edges[0]?.node?.url || null;
+    // Handle direct array structure (fallback for demo products)
+    if (Array.isArray(product.images)) {
+      if (index !== undefined && product.images[index]) {
+        const image = product.images[index];
+        if (hasImageEdgesStructure(image)) {
+          return image.edges[0]?.node?.url || null;
+        }
+        if (hasImageUrl(image)) {
+          return image.url;
+        }
       }
-
-      if (hasImageUrl(firstImage)) {
-        return firstImage.url;
+      // Fallback to first image
+      if (product.images.length > 0) {
+        const firstImage = product.images[0];
+        if (hasImageEdgesStructure(firstImage)) {
+          return firstImage.edges[0]?.node?.url || null;
+        }
+        if (hasImageUrl(firstImage)) {
+          return firstImage.url;
+        }
       }
     }
 
-    // If no images found, return null instead of empty string
+    // If no images found, return null
     return null;
   };
 

@@ -8,6 +8,7 @@ import {
   fetchRelatedProducts,
 } from "../../../lib/shopify";
 import { useCartStore } from "../../../store/cartStore";
+import RecentlyViewed from "../../../components/RecentlyViewed";
 
 interface ProductImage {
   id: string;
@@ -83,35 +84,53 @@ export default function ProductPage() {
   const [activeTab, setActiveTab] = useState<
     "description" | "ingredients" | "howToUse" | "benefits"
   >("description");
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
   const addToCart = useCartStore((s) => s.addToCart);
   const openCart = useCartStore((s) => s.openCart);
 
-  // Add to wishlist function
-  const addToWishlist = () => {
-    if (product && (window as any).addToWishlist) {
-      (window as any).addToWishlist({
-        id: product.id,
-        title: product.title,
-        handle: product.handle,
-        image: product.images.edges[0]?.node.url || "",
-        price: parseFloat(product.priceRange.minVariantPrice.amount),
-      });
+  // Add/Remove from wishlist function
+  const toggleWishlist = () => {
+    if (!product) return;
+
+    if (isInWishlist) {
+      // Remove from wishlist
+      if ((window as any).removeFromWishlist) {
+        (window as any).removeFromWishlist(product.id);
+        setIsInWishlist(false);
+      }
+    } else {
+      // Add to wishlist
+      if ((window as any).addToWishlist) {
+        (window as any).addToWishlist({
+          id: product.id,
+          title: product.title,
+          handle: product.handle,
+          image: product.images.edges[0]?.node.url || "",
+          price: parseFloat(product.priceRange.minVariantPrice.amount),
+        });
+        setIsInWishlist(true);
+      }
     }
   };
 
-  // Add to recently viewed function
-  const addToRecentlyViewed = () => {
-    if (product && (window as any).addToRecentlyViewed) {
-      (window as any).addToRecentlyViewed({
-        id: product.id,
-        title: product.title,
-        handle: product.handle,
-        image: product.images.edges[0]?.node.url || "",
-        price: parseFloat(product.priceRange.minVariantPrice.amount),
-      });
+  // Check if product is in wishlist
+  useEffect(() => {
+    if (product && (window as any).isInWishlist) {
+      const checkWishlist = () => {
+        const inWishlist = (window as any).isInWishlist(product.id);
+        setIsInWishlist(inWishlist);
+      };
+
+      // Check immediately
+      checkWishlist();
+
+      // Set up interval to check for changes
+      const interval = setInterval(checkWishlist, 1000);
+
+      return () => clearInterval(interval);
     }
-  };
+  }, [product]);
 
   useEffect(() => {
     if (!handle) return;
@@ -141,9 +160,6 @@ export default function ProductPage() {
           productData.tags,
           productData.vendor,
         ).then(setRelatedProducts);
-
-        // Add to recently viewed
-        setTimeout(() => addToRecentlyViewed(), 100);
       }
       setLoading(false);
     });
@@ -408,20 +424,17 @@ export default function ProductPage() {
             {/* Action Buttons */}
             <div className="mt-4 flex flex-col gap-3 md:flex-row">
               <motion.button
-                onClick={addToWishlist}
-                className="flex-1 rounded-lg border border-gray-300 py-3 text-sm font-medium text-gray-700 transition-all hover:border-black hover:text-black"
+                onClick={toggleWishlist}
+                className={`w-full rounded-lg border py-3 text-sm font-medium transition-all ${
+                  isInWishlist
+                    ? "border-red-300 bg-red-50 text-red-700 hover:border-red-400"
+                    : "border-gray-300 text-gray-700 hover:border-black hover:text-black"
+                }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                ❤️ Add to Wishlist
-              </motion.button>
-              <motion.button
-                onClick={addToRecentlyViewed}
-                className="flex-1 rounded-lg border border-gray-300 py-3 text-sm font-medium text-gray-700 transition-all hover:border-black hover:text-black"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                👁️ Recently Viewed
+                {isInWishlist ? "❤️" : "🤍"}
+                {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
               </motion.button>
             </div>
 
@@ -550,6 +563,9 @@ export default function ProductPage() {
             </div>
           </div>
         )}
+
+        {/* Recently Viewed Products */}
+        <RecentlyViewed />
       </div>
     </div>
   );

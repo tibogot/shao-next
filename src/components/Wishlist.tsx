@@ -70,6 +70,8 @@ export default function Wishlist() {
     (window as any).isInWishlist = (id: string) =>
       wishlistItems.some((item) => item.id === id);
     (window as any).getWishlistItems = () => wishlistItems;
+    (window as any).openWishlist = () => setIsOpen(true);
+    (window as any).removeFromWishlist = removeFromWishlist;
   }, [wishlistItems]);
 
   // Handle scroll blocking when wishlist is open
