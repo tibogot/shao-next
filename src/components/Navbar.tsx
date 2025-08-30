@@ -86,6 +86,10 @@ export default function Navbar() {
       const viewportWidth = window.innerWidth;
       const isMobile = viewportWidth < 768;
 
+      // Detect if device supports touch (better mobile detection)
+      const isTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
       // Calculate how far to move logo to center of screen
       const heroY = viewportHeight / 2; // Center of viewport
       const navbarCenter =
@@ -131,51 +135,90 @@ export default function Navbar() {
         willChange: isMobile ? "transform" : "auto", // Optimize for mobile transforms
       });
 
-      // Mobile-optimized ScrollTrigger settings
-      const scrollTriggerConfig = {
-        trigger: "body",
-        start: "top top",
-        end: `top -${viewportHeight * 0.8}px`, // End at 80% of viewport
-        scrub: isMobile ? 0.5 : 1.2, // Much smoother scrub for mobile
-        ease: "power2.out",
-        // Mobile-specific optimizations
-        ...(isMobile && {
-          refreshPriority: -1, // Lower priority for mobile
-          invalidateOnRefresh: false, // Don't invalidate on mobile refresh
-        }),
-        // @ts-ignore
-        onComplete: () => {
-          // Ensure final state
-          gsap.set(logoRef.current, {
-            y: 0,
-            scale: 1,
-            filter: "brightness(0)", // Black for navbar
-          });
-        },
-      };
+      // Different approach for touch devices vs desktop
+      if (isTouchDevice && isMobile) {
+        // Mobile/touch: Use simpler, throttled animation
+        let ticking = false;
 
-      // Create timeline to animate back to navbar position
-      const tl = gsap.timeline({
-        scrollTrigger: scrollTriggerConfig,
-      });
+        ScrollTrigger.create({
+          trigger: "body",
+          start: "top top",
+          end: `top -${viewportHeight * 0.6}px`, // Shorter range for mobile
+          onUpdate: (self) => {
+            if (!ticking) {
+              ticking = true;
+              const progress = self.progress;
 
-      // Animate from hero back to navbar with mobile optimizations
-      tl.to(logoRef.current, {
-        y: 0,
-        scale: 1,
-        duration: 1,
-        ease: isMobile ? "power1.out" : "power2.out", // Simpler easing for mobile
-        force3D: true, // GPU acceleration
-        willChange: isMobile ? "transform" : "auto",
-      }).to(
-        logoRef.current,
-        {
-          filter: "brightness(0)", // Change to black
-          duration: 0.1,
-          ease: "none",
-        },
-        0.9, // Near the end
-      );
+              // Use requestAnimationFrame to throttle updates on mobile
+              requestAnimationFrame(() => {
+                if (!logoRef.current) {
+                  ticking = false;
+                  return;
+                }
+
+                // Smooth interpolation for mobile with easing
+                const easedProgress =
+                  progress < 0.5
+                    ? 2 * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2; // easeInOutQuad
+
+                const currentY = distanceToHero * (1 - easedProgress);
+                const currentScale =
+                  heroScale + (1 - heroScale) * easedProgress;
+                const brightness = easedProgress > 0.8 ? 0 : 1;
+
+                gsap.set(logoRef.current, {
+                  y: currentY,
+                  scale: currentScale,
+                  filter: `brightness(${brightness})`,
+                  force3D: true,
+                });
+
+                ticking = false;
+              });
+            }
+          },
+          refreshPriority: -1,
+          invalidateOnRefresh: false,
+        });
+      } else {
+        // Desktop: Use smooth scrubbed animation
+        const scrollTriggerConfig = {
+          trigger: "body",
+          start: "top top",
+          end: `top -${viewportHeight * 0.8}px`,
+          scrub: 1.2,
+          ease: "power2.out",
+          // @ts-ignore
+          onComplete: () => {
+            gsap.set(logoRef.current, {
+              y: 0,
+              scale: 1,
+              filter: "brightness(0)",
+            });
+          },
+        };
+
+        const tl = gsap.timeline({
+          scrollTrigger: scrollTriggerConfig,
+        });
+
+        tl.to(logoRef.current, {
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: "power2.out",
+          force3D: true,
+        }).to(
+          logoRef.current,
+          {
+            filter: "brightness(0)",
+            duration: 0.1,
+            ease: "none",
+          },
+          0.9,
+        );
+      }
     };
 
     // Setup initial animation
@@ -190,7 +233,10 @@ export default function Navbar() {
 
       // Debounce resize events - longer delay for mobile
       clearTimeout(resizeTimeout);
-      const delay = window.innerWidth < 768 ? 300 : 150;
+      const currentIsMobile = window.innerWidth < 768;
+      const currentIsTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      const delay = currentIsMobile && currentIsTouchDevice ? 500 : 150; // Even longer for touch mobile
 
       resizeTimeout = setTimeout(() => {
         isResizing = true;
