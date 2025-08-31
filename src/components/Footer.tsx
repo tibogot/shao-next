@@ -169,7 +169,6 @@ export default function Footer() {
               width={116}
               height={39}
               className="h-16 w-auto object-contain brightness-0 md:h-20 lg:h-24"
-              priority
             />
           </div>
 
