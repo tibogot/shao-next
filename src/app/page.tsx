@@ -41,15 +41,10 @@ export default function Home() {
           quality={85}
         />
 
-        {/* No more hero logo - we'll use the navbar logo instead */}
-
-        {/* <div className="hero-text font-neue-montreal z-10 text-white">
-          <h2 className="text-2xl font-medium"> Future skincare </h2>
-          <p className="mt-2 text-base">
-            Innovative formules to nouish, awaken, and restore your skin
-          </p>
-          <button className="btn-primary mt-8"> Shop now </button>
-        </div> */}
+        {/* Small text at bottom for LCP detection */}
+        <div className="absolute bottom-8 left-8 z-10 text-white">
+          <p className="font-neue-montreal text-sm">SHAO</p>
+        </div>
       </div>
       <section className="px-4 py-12 md:px-8 md:py-16">
         <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
