@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { fetchProductsByVendor } from "../lib/shopify";
 import { useScrollTriggerRefresh } from "../hooks/useScrollTriggerRefresh";
 import Link from "next/link";
@@ -82,10 +83,15 @@ export default function HydrogenProducts() {
               href={`/product/${p.handle}`}
               className="block min-h-[450px] rounded-sm"
             >
-              <img
+              <Image
                 src={p.images.edges[0]?.node.url}
                 alt={p.title}
+                width={400}
+                height={450}
                 className="mb-2 h-[450px] w-full rounded object-cover"
+                sizes="(max-width: 1024px) 50vw, 25vw"
+                loading="lazy"
+                style={{ height: "auto" }}
               />
               <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
                 {p.title}

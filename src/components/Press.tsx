@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export default function Press() {
   return (
     <section className="press px-4 py-12 md:px-8 md:py-16">
@@ -11,10 +13,15 @@ export default function Press() {
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Article 1 */}
         <article className="block">
-          <img
+          <Image
             src="/images/press-1.jpg"
             alt="SHAO Featured in Beauty Magazine"
+            width={400}
+            height={450}
             className="mb-2 h-[450px] w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
+            loading="lazy"
+            style={{ height: "auto" }}
           />
           <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
             Beauty Magazine Feature
@@ -28,10 +35,15 @@ export default function Press() {
 
         {/* Article 2 */}
         <article className="block">
-          <img
+          <Image
             src="/images/press-2.jpg"
             alt="Sustainable Beauty Awards 2024"
+            width={400}
+            height={450}
             className="mb-2 h-[450px] w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
+            loading="lazy"
+            style={{ height: "auto" }}
           />
           <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
             Sustainability Award Winner
@@ -45,10 +57,15 @@ export default function Press() {
 
         {/* Article 3 */}
         <article className="block">
-          <img
+          <Image
             src="/images/press-3.jpg"
             alt="Botanical Innovation in Skincare"
+            width={400}
+            height={450}
             className="mb-2 h-[450px] w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
+            loading="lazy"
+            style={{ height: "auto" }}
           />
           <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
             Innovation Spotlight
