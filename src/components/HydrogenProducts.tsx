@@ -87,13 +87,13 @@ export default function HydrogenProducts() {
                 alt={p.title}
                 className="mb-2 h-[450px] w-full rounded object-cover"
               />
-              <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+              <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
                 {p.title}
               </div>
-              <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+              <div className="mt-4 line-clamp-3 text-sm text-gray-600">
                 {p.description}
               </div>
-              <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+              <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
                 {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
               </div>
             </Link>

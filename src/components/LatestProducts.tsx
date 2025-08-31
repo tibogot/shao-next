@@ -30,11 +30,11 @@ function formatEuroPrice(amount: string) {
 // Skeleton component for consistent sizing
 function ProductSkeleton() {
   return (
-    <div className="block min-h-[450px] animate-pulse rounded-sm">
-      <div className="mb-2 h-[450px] w-full rounded bg-gray-200"></div>
-      <div className="mt-8 mb-2 h-5 w-3/4 rounded bg-gray-200"></div>
-      <div className="mb-2 h-4 w-full rounded bg-gray-200"></div>
-      <div className="h-4 w-1/2 rounded bg-gray-200"></div>
+    <div className="block min-h-[450px] animate-pulse">
+      <div className="mb-2 h-[450px] w-full bg-gray-200"></div>
+      <div className="mt-8 mb-2 h-5 w-3/4 bg-gray-200"></div>
+      <div className="mb-2 h-4 w-full bg-gray-200"></div>
+      <div className="h-4 w-1/2 bg-gray-200"></div>
     </div>
   );
 }
@@ -80,20 +80,20 @@ export default function LatestProducts() {
             <Link
               key={p.id}
               href={`/product/${p.handle}`}
-              className="block min-h-[450px] rounded-sm"
+              className="block min-h-[450px]"
             >
               <img
                 src={p.images.edges[0]?.node.url}
                 alt={p.title}
-                className="mb-2 h-[450px] w-full rounded object-cover"
+                className="mb-2 h-[450px] w-full object-cover"
               />
-              <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+              <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
                 {p.title}
               </div>
-              <div className="mb-2 line-clamp-3 text-sm text-gray-600">
+              <div className="font-neue-montreal mb-2 line-clamp-3 text-sm text-gray-600">
                 {p.description}
               </div>
-              <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+              <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
                 {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
               </div>
             </Link>

@@ -81,7 +81,7 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="mx-auto px-4 py-8 md:px-8">
+    <div className="mx-auto px-4 py-40 md:px-8">
       <div className="mb-8">
         <h1 className="font-neue-montreal-mono mb-4 text-3xl uppercase">
           Shop

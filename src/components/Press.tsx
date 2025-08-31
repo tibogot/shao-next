@@ -10,16 +10,16 @@ export default function Press() {
       {/* Articles Grid */}
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Article 1 */}
-        <article className="block rounded-sm">
+        <article className="block">
           <img
-            src="/hero.webp"
+            src="/images/press-1.jpg"
             alt="SHAO Featured in Beauty Magazine"
-            className="mb-2 h-[450px] w-full rounded object-cover"
+            className="mb-2 h-[450px] w-full object-cover"
           />
-          <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+          <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
             Beauty Magazine Feature
           </div>
-          <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+          <div className="mt-4 line-clamp-3 text-sm text-gray-600">
             SHAO's innovative approach to sustainable beauty has caught the
             attention of industry leaders, highlighting our commitment to
             natural ingredients and eco-friendly practices.
@@ -27,16 +27,16 @@ export default function Press() {
         </article>
 
         {/* Article 2 */}
-        <article className="block rounded-sm">
+        <article className="block">
           <img
-            src="/side1.webp"
+            src="/images/press-2.jpg"
             alt="Sustainable Beauty Awards 2024"
-            className="mb-2 h-[450px] w-full rounded object-cover"
+            className="mb-2 h-[450px] w-full object-cover"
           />
-          <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+          <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
             Sustainability Award Winner
           </div>
-          <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+          <div className="mt-4 line-clamp-3 text-sm text-gray-600">
             Recognized at the 2024 Sustainable Beauty Awards for our
             groundbreaking bio-fermentation technology and commitment to
             environmental responsibility in cosmetics.
@@ -44,16 +44,16 @@ export default function Press() {
         </article>
 
         {/* Article 3 */}
-        <article className="block rounded-sm">
+        <article className="block">
           <img
-            src="/hero-1.webp"
+            src="/images/press-3.jpg"
             alt="Botanical Innovation in Skincare"
-            className="mb-2 h-[450px] w-full rounded object-cover"
+            className="mb-2 h-[450px] w-full object-cover"
           />
-          <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+          <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
             Innovation Spotlight
           </div>
-          <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+          <div className="mt-4 line-clamp-3 text-sm text-gray-600">
             Featured in Tech Beauty Review for our unique blend of traditional
             botanical wisdom with cutting-edge biotechnology, setting new
             standards in natural skincare.

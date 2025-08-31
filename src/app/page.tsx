@@ -62,7 +62,7 @@ export default function Home() {
         </p>
       </section>
       <LatestProducts />
-      <RecentlyViewed />
+      {/* <RecentlyViewed /> */}
       <section className="flex flex-col gap-6 px-4 py-12 md:flex-row md:gap-8 md:px-8 md:py-16">
         <div className="md:w-1/2">
           <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
@@ -82,10 +82,9 @@ export default function Home() {
             alt="Future skincare"
             width={800}
             height={650}
-            className="h-[650px] w-full object-cover"
+            className="h-[750px] w-full object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority={false}
-            style={{ height: "auto" }}
           />
         </div>
       </section>
@@ -116,7 +115,7 @@ export default function Home() {
         </div>
         <div className="md:w-1/2">
           <Image
-            src="/hero.webp"
+            src="/images/image-4.jpg"
             alt="Future skincare"
             width={800}
             height={600}
@@ -128,9 +127,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative h-svh w-full bg-blue-200">
+      <section className="relative h-svh w-full">
         <Image
-          src="/hero-1.webp"
+          src="/images/image-3.jpg"
           alt="Hero"
           fill
           className="object-cover"
