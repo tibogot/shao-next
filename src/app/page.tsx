@@ -128,18 +128,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative h-svh w-full">
-        <Image
-          src="/images/image-3.jpg"
-          alt="Hero"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 h-full w-full object-cover"
-          sizes="100vw"
-          priority
-          quality={85}
-        />
-      </section>
+      {/* Removed duplicate hero image section */}
       <Press />
       <FAQ />
 

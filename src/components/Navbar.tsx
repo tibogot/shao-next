@@ -288,6 +288,7 @@ export default function Navbar() {
       <motion.button
         className="flex cursor-pointer flex-col gap-1 md:hidden"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle mobile menu"
         animate={{
           color: isScrolled ? "#000000" : "#ffffff",
         }}
