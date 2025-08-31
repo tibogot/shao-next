@@ -101,12 +101,13 @@ export const defaultMetadata: Metadata = {
   other: {
     "theme-color": "#FBFBFB", // Your brand color
     "color-scheme": "light",
-    "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-status-bar-style": "default",
-    "apple-mobile-web-app-title": "SHAO",
-    "application-name": "SHAO Cosmetics",
     "msapplication-TileColor": "#FBFBFB",
     "msapplication-config": "/browserconfig.xml",
+  },
+  appleWebApp: {
+    title: "SHAO",
+    statusBarStyle: "default",
+    startupImage: ["/logo.svg"],
   },
 };
 
