@@ -198,7 +198,7 @@ export default function FAQ() {
           </p>
           <motion.a
             href="mailto:hello@shao.com"
-            className="font-neue-montreal-mono inline-flex cursor-pointer items-center rounded-full bg-black px-8 py-3 text-sm font-medium text-white"
+            className="font-neue-montreal-mono inline-flex cursor-pointer items-center bg-black px-8 py-3 text-sm font-medium text-white"
             whileHover={{
               scale: 1.05,
               backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -207,7 +207,7 @@ export default function FAQ() {
             whileTap={{ scale: 0.95 }}
           >
             Contact Us
-            <motion.svg
+            {/* <motion.svg
               className="ml-2 h-4 w-4"
               fill="none"
               viewBox="0 0 24 24"
@@ -221,7 +221,7 @@ export default function FAQ() {
                 strokeWidth={2}
                 d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
-            </motion.svg>
+            </motion.svg> */}
           </motion.a>
         </motion.div>
       </div>
