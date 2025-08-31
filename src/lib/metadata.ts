@@ -230,58 +230,70 @@ export const pageMetadata = {
     title: "Shopping Cart - SHAO Cosmetics",
     description:
       "Your SHAO shopping cart. Review and checkout your selected natural skincare products.",
-    robots: {
-      index: false,
-      follow: false,
-    },
+    keywords: [
+      "shopping cart",
+      "checkout",
+      "SHAO cosmetics",
+      "natural skincare products",
+    ],
     openGraph: {
       title: "Shopping Cart - SHAO Cosmetics",
       description:
         "Your SHAO shopping cart. Review and checkout your selected natural skincare products.",
+    },
+    robots: {
+      index: false,
+      follow: false,
     },
   },
   account: {
     title: "My Account - SHAO Cosmetics",
     description:
       "Manage your SHAO account, view orders, and update your profile.",
-    robots: {
-      index: false,
-      follow: false,
-    },
+    keywords: [
+      "my account",
+      "SHAO account",
+      "order history",
+      "profile management",
+    ],
     openGraph: {
       title: "My Account - SHAO Cosmetics",
       description:
         "Manage your SHAO account, view orders, and update your profile.",
     },
+    robots: {
+      index: false,
+      follow: false,
+    },
   },
-  auth: {
-    signin: {
+  signin: {
+    title: "Sign In - SHAO Cosmetics",
+    description:
+      "Sign in to your SHAO account to access your orders, wishlist, and personalized recommendations.",
+    keywords: ["sign in", "login", "SHAO account", "authentication"],
+    openGraph: {
       title: "Sign In - SHAO Cosmetics",
       description:
         "Sign in to your SHAO account to access your orders, wishlist, and personalized recommendations.",
-      robots: {
-        index: false,
-        follow: false,
-      },
-      openGraph: {
-        title: "Sign In - SHAO Cosmetics",
-        description:
-          "Sign in to your SHAO account to access your orders, wishlist, and personalized recommendations.",
-      },
     },
-    signup: {
+    robots: {
+      index: false,
+      follow: false,
+    },
+  },
+  signup: {
+    title: "Sign Up - SHAO Cosmetics",
+    description:
+      "Create your SHAO account to start your natural skincare journey with personalized recommendations and exclusive offers.",
+    keywords: ["sign up", "register", "create account", "SHAO membership"],
+    openGraph: {
       title: "Sign Up - SHAO Cosmetics",
       description:
         "Create your SHAO account to start your natural skincare journey with personalized recommendations and exclusive offers.",
-      robots: {
-        index: false,
-        follow: false,
-      },
-      openGraph: {
-        title: "Sign Up - SHAO Cosmetics",
-        description:
-          "Create your SHAO account to start your natural skincare journey with personalized recommendations and exclusive offers.",
-      },
+    },
+    robots: {
+      index: false,
+      follow: false,
     },
   },
 };
@@ -290,22 +302,26 @@ export const pageMetadata = {
 export function generateMetadata(
   page: keyof typeof pageMetadata,
   customData?: Partial<Metadata>,
-) {
+): Metadata {
   const baseMetadata = pageMetadata[page] || pageMetadata.home;
 
   return {
     ...defaultMetadata,
-    ...baseMetadata,
-    ...customData,
+    title: baseMetadata.title,
+    description: baseMetadata.description,
+    keywords: baseMetadata.keywords,
+    robots: (baseMetadata as any).robots || defaultMetadata.robots,
     openGraph: {
       ...defaultMetadata.openGraph,
-      ...baseMetadata.openGraph,
-      ...customData?.openGraph,
+      title: baseMetadata.openGraph.title,
+      description: baseMetadata.openGraph.description,
     },
     twitter: {
       ...defaultMetadata.twitter,
-      ...customData?.twitter,
+      title: baseMetadata.openGraph.title,
+      description: baseMetadata.openGraph.description,
     },
+    ...customData,
   };
 }
 
@@ -315,19 +331,25 @@ export function generateProductMetadata(
   productDescription: string,
   productImage?: string,
 ): Metadata {
+  const keywords = Array.isArray(defaultMetadata.keywords)
+    ? defaultMetadata.keywords
+    : [];
+  const openGraph = defaultMetadata.openGraph || {};
+  const twitter = defaultMetadata.twitter || {};
+
   return {
     ...defaultMetadata,
     title: `${productName} - SHAO Natural Skincare`,
     description: productDescription,
     keywords: [
-      ...defaultMetadata.keywords,
+      ...keywords,
       productName.toLowerCase(),
       "natural skincare product",
       "bio-fermented skincare",
       "sustainable beauty product",
     ],
     openGraph: {
-      ...defaultMetadata.openGraph,
+      ...openGraph,
       title: `${productName} - SHAO Natural Skincare`,
       description: productDescription,
       images: productImage
@@ -339,13 +361,13 @@ export function generateProductMetadata(
               alt: `${productName} - SHAO Natural Skincare`,
             },
           ]
-        : defaultMetadata.openGraph.images,
+        : openGraph.images || [],
     },
     twitter: {
-      ...defaultMetadata.twitter,
+      ...twitter,
       title: `${productName} - SHAO Natural Skincare`,
       description: productDescription,
-      images: productImage ? [productImage] : defaultMetadata.twitter.images,
+      images: productImage ? [productImage] : twitter.images || [],
     },
   };
 }

@@ -9,7 +9,6 @@ import LenisProvider from "../components/LenisProvider";
 import { ScrollToTop } from "../components/ScrollToTop";
 import Providers from "../components/Providers";
 import { defaultMetadata } from "../lib/metadata";
-
 const neueMontreal = localFont({
   src: [
     {
