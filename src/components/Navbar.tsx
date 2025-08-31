@@ -417,7 +417,7 @@ export default function Navbar() {
               width={116}
               height={39}
               className="h-6 w-auto object-cover md:h-8"
-              priority
+              // priority
               style={{ maxWidth: "none" }}
             />
           </div>
