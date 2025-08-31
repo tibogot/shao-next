@@ -33,8 +33,9 @@ export default function Home() {
         <Image
           src="/hero-1.webp"
           alt="Hero"
-          fill
-          className="object-cover"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 h-full w-full object-cover"
           sizes="100vw"
           priority
           quality={85}
