@@ -16,6 +16,12 @@ type Product = {
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
 };
 
+type ProductsByVendorProps = {
+  vendor: string;
+  title?: string;
+  limit?: number;
+};
+
 function formatEuroPrice(amount: string) {
   return (
     "€" +
@@ -40,7 +46,11 @@ function ProductSkeleton() {
   );
 }
 
-export default function HydrogenProducts() {
+export default function ProductsByVendor({
+  vendor,
+  title,
+  limit = 4,
+}: ProductsByVendorProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,66 +58,81 @@ export default function HydrogenProducts() {
   useScrollTriggerRefresh([loading, products.length]);
 
   useEffect(() => {
-    console.log("HydrogenProducts: Starting to fetch products...");
+    console.log(
+      `ProductsByVendor: Starting to fetch products for vendor: ${vendor}`,
+    );
     setLoading(true);
-    fetchProductsByVendor("Hydrogen Vendor", 4)
+    fetchProductsByVendor(vendor, limit)
       .then((data) => {
-        console.log("HydrogenProducts: Received data:", data);
+        console.log(`ProductsByVendor: Received data for ${vendor}:`, data);
         setProducts(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("HydrogenProducts: Error fetching products:", error);
+        console.error(
+          `ProductsByVendor: Error fetching products for ${vendor}:`,
+          error,
+        );
         setLoading(false);
       });
-  }, []);
+  }, [vendor, limit]);
 
   return (
     <section className="px-4 py-8 md:px-8">
       <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
-        Hydrogen Collection
+        {title || `${vendor} Collection`}
       </h2>
 
       {/* Always show the grid with consistent height */}
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {loading ? (
-          // Show 4 skeleton items with exact same dimensions
-          Array.from({ length: 4 }).map((_, index) => (
+          // Show skeleton items with exact same dimensions
+          Array.from({ length: limit }).map((_, index) => (
             <ProductSkeleton key={`skeleton-${index}`} />
           ))
         ) : products.length > 0 ? (
           // Show actual products with same dimensions
-          products.map((p) => (
-            <Link
-              key={p.id}
-              href={`/product/${p.handle}`}
-              className="block min-h-[450px] rounded-sm"
-            >
-              <Image
-                src={p.images.edges[0]?.node.url}
-                alt={p.title}
-                width={400}
-                height={450}
-                className="mb-2 h-[450px] w-full rounded object-cover"
-                sizes="(max-width: 1024px) 50vw, 25vw"
-                loading="lazy"
-                style={{ height: "auto" }}
-              />
-              <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
-                {p.title}
-              </div>
-              <div className="mt-4 line-clamp-3 text-sm text-gray-600">
-                {p.description}
-              </div>
-              <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
-                {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
-              </div>
-            </Link>
-          ))
+          products.map((p) => {
+            const imageUrl = p.images.edges[0]?.node.url;
+
+            return (
+              <Link
+                key={p.id}
+                href={`/product/${p.handle}`}
+                className="block min-h-[450px] rounded-sm"
+              >
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt={p.title}
+                    width={400}
+                    height={450}
+                    className="mb-2 h-[450px] w-full rounded object-cover"
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    loading="lazy"
+                    style={{ height: "auto" }}
+                  />
+                ) : (
+                  <div className="mb-2 flex h-[450px] w-full items-center justify-center rounded bg-gray-200">
+                    <span className="text-sm text-gray-500">No Image</span>
+                  </div>
+                )}
+                <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
+                  {p.title}
+                </div>
+                <div className="mt-4 line-clamp-3 text-sm text-gray-600">
+                  {p.description}
+                </div>
+                <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
+                  {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
+                </div>
+              </Link>
+            );
+          })
         ) : (
           // Error state with same height
           <div className="col-span-full flex min-h-[450px] items-center justify-center py-4 text-center">
-            No Hydrogen products found. Check console for details.
+            No {vendor} products found. Check console for details.
           </div>
         )}
       </div>

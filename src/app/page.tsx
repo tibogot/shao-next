@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState, useRef } from "react";
 import LatestProducts from "../components/LatestProducts";
-import HydrogenProducts from "../components/HydrogenProducts";
+import ProductsByVendor from "../components/HydrogenProducts";
 import FAQ from "@/components/FAQ";
 import Press from "@/components/Press";
 import RecentlyViewed from "../components/RecentlyViewed";
@@ -84,7 +84,10 @@ export default function Home() {
           />
         </div>
       </section>
-      <HydrogenProducts />
+      {/* <ProductsByVendor vendor="Hydrogen Vendor" title="Hydrogen Collection" /> */}
+
+      {/* Example of how to use with shao-next vendor */}
+      <ProductsByVendor vendor="cream" title="SHAO Collection" limit={6} />
 
       <section className="px-4 py-12 md:px-8 md:py-16">
         <h2 className="font-neue-montreal-mono text-sm text-black/60 uppercase">
