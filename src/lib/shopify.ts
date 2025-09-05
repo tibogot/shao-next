@@ -245,9 +245,27 @@ export async function fetchRelatedProducts(
     .slice(0, 3)
     .map((tag) => `tag:${tag}`)
     .join(" OR ");
+
+  // Build query more intelligently
+  let fullQuery = "";
+  if (tagQuery && tagQuery.length > 0) {
+    fullQuery = `${tagQuery} OR vendor:${vendor}`;
+  } else {
+    // If no tags, only search by vendor
+    fullQuery = `vendor:${vendor}`;
+  }
+
+  // Debug logging
+  console.log("🔍 Related Products Debug:");
+  console.log("- Product ID:", productId);
+  console.log("- Tags:", tags);
+  console.log("- Vendor:", vendor);
+  console.log("- Tag Query:", tagQuery);
+  console.log("- Full Query:", fullQuery);
+
   const query = `
     {
-      products(first: ${limit + 1}, query: "${tagQuery} OR vendor:${vendor}") {
+      products(first: ${limit + 1}, query: "${fullQuery}") {
         edges {
           node {
             id
@@ -255,6 +273,7 @@ export async function fetchRelatedProducts(
             handle
             description
             vendor
+            tags
             availableForSale
             images(first: 1) { 
               edges { 
@@ -275,11 +294,34 @@ export async function fetchRelatedProducts(
 
   try {
     const { data } = await client.request(query);
+    console.log("- Raw Results:", data.products.edges.length, "products found");
+    console.log(
+      "- Results:",
+      data.products.edges.map((edge: any) => ({
+        id: edge.node.id,
+        title: edge.node.title,
+        tags: edge.node.tags,
+        vendor: edge.node.vendor,
+      })),
+    );
+
     // Filter out the current product and return others
-    return data.products.edges
+    const filtered = data.products.edges
       .map((edge: any) => edge.node)
       .filter((product: any) => product.id !== productId)
       .slice(0, limit);
+
+    console.log(
+      "- Filtered Results:",
+      filtered.length,
+      "products after filtering",
+    );
+    console.log(
+      "- Final Products:",
+      filtered.map((p: any) => p.title),
+    );
+
+    return filtered;
   } catch (error) {
     console.error("Failed to fetch related products:", error);
     return [];

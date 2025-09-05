@@ -140,6 +140,26 @@ export default function ProductPage() {
       if (productData) {
         setProduct(productData);
 
+        // Add product to recently viewed (with retry mechanism)
+        const addToRecentlyViewed = () => {
+          if ((window as any).addToRecentlyViewed) {
+            (window as any).addToRecentlyViewed({
+              id: productData.id,
+              title: productData.title,
+              handle: productData.handle,
+              image: productData.images.edges[0]?.node.url || "",
+              price: parseFloat(productData.priceRange.minVariantPrice.amount),
+            });
+            return true;
+          }
+          return false;
+        };
+
+        // Try immediately, then retry after a short delay if needed
+        if (!addToRecentlyViewed()) {
+          setTimeout(addToRecentlyViewed, 100);
+        }
+
         // Set default selected variant
         if (productData.variants.edges.length > 0) {
           setSelectedVariant(productData.variants.edges[0].node);
@@ -524,7 +544,7 @@ export default function ProductPage() {
             <h2 className="font-neue-montreal mb-8 text-xl font-light md:text-2xl lg:text-3xl">
               You might also like
             </h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {relatedProducts.slice(0, 4).map((relatedProduct) => (
                 <motion.a
                   key={relatedProduct.id}
