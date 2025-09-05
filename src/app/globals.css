@@ -5,6 +5,15 @@
   --foreground: #171717;
 } */
 
+/* Hide scrollbar for horizontal scroll carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 /* Ensure all clickable elements have pointer cursor */
 button,
 [role="button"],

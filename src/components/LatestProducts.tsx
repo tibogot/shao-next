@@ -68,18 +68,68 @@ export default function LatestProducts() {
         Latest Products
       </h2>
 
-      {/* Always show the grid with consistent height */}
-      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {/* Mobile: Horizontal scroll carousel */}
+      <div className="mt-8 md:hidden">
+        <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-4">
+          {loading ? (
+            // Show 4 skeleton items for mobile carousel
+            Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={`mobile-skeleton-${index}`}
+                className="w-[280px] flex-shrink-0"
+              >
+                <ProductSkeleton />
+              </div>
+            ))
+          ) : products.length > 0 ? (
+            // Show actual products in mobile carousel
+            products.map((p) => (
+              <Link
+                key={`mobile-${p.id}`}
+                href={`/product/${p.handle}`}
+                className="block min-h-[450px] w-[280px] flex-shrink-0"
+              >
+                <Image
+                  src={p.images.edges[0]?.node.url}
+                  alt={p.title}
+                  width={280}
+                  height={350}
+                  className="mb-2 h-[350px] w-full rounded-sm object-cover"
+                  sizes="280px"
+                  loading="lazy"
+                />
+                <div className="font-neue-montreal-mono mt-4 text-sm uppercase">
+                  {p.title}
+                </div>
+                <div className="font-neue-montreal mb-2 line-clamp-2 text-sm text-gray-600">
+                  {p.description}
+                </div>
+                <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
+                  {formatEuroPrice(p.priceRange.minVariantPrice.amount)}
+                </div>
+              </Link>
+            ))
+          ) : (
+            // Error state for mobile
+            <div className="flex min-h-[450px] w-full items-center justify-center py-4 text-center">
+              No products found. Check console for details.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop: Grid layout */}
+      <div className="mt-8 hidden grid-cols-1 gap-6 md:grid md:grid-cols-2 lg:grid-cols-4">
         {loading ? (
           // Show 4 skeleton items with exact same dimensions
           Array.from({ length: 4 }).map((_, index) => (
-            <ProductSkeleton key={`skeleton-${index}`} />
+            <ProductSkeleton key={`desktop-skeleton-${index}`} />
           ))
         ) : products.length > 0 ? (
           // Show actual products with same dimensions
           products.map((p) => (
             <Link
-              key={p.id}
+              key={`desktop-${p.id}`}
               href={`/product/${p.handle}`}
               className="block min-h-[450px]"
             >
@@ -89,7 +139,7 @@ export default function LatestProducts() {
                 width={400}
                 height={450}
                 className="mb-2 h-[450px] w-full object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                sizes="(max-width: 1024px) 50vw, 25vw"
                 loading="lazy"
                 style={{ height: "auto" }}
               />
