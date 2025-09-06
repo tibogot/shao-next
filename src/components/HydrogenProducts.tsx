@@ -84,7 +84,7 @@ export default function ProductsByVendor({
       </h2>
 
       {/* Responsive layout: Horizontal scroll on mobile, grid on desktop */}
-      <div className="mt-8 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-4">
+      <div className="scrollbar-hide mt-8 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-4">
         {loading ? (
           // Show skeleton items
           Array.from({ length: limit }).map((_, index) => (

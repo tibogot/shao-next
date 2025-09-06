@@ -130,6 +130,28 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="relative flex h-[60vh] items-end px-4 py-12 md:h-svh md:px-8 md:py-16">
+        {/* <div className="relative z-10 text-white">
+          <h2 className="font-neue-montreal-mono text-sm text-white/70 uppercase">
+            Active Recovery
+          </h2>
+          <p className="font-neue-montreal mt-6 max-w-xl text-lg md:mt-8 md:text-xl">
+            Advanced formulas for slow rituals, REOME's elevated skincare is
+            powered by biotechnology and bio-fermentation, with one singular
+            intention: to heal and restore skin.
+          </p>
+        </div> */}
+        <Image
+          src="/lastimg.webp"
+          alt="Future skincare"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+          quality={85}
+        />
+      </section>
+
       {/* Removed duplicate hero image section */}
       <Press />
       <FAQ />
