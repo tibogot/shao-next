@@ -78,7 +78,7 @@ export default function Home() {
             alt="Future skincare"
             width={800}
             height={650}
-            className="h-[750px] w-full object-cover"
+            className="h-[550px] w-full object-cover md:h-[750px]"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority={false}
           />

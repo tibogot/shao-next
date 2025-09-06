@@ -83,15 +83,20 @@ export default function ProductsByVendor({
         {title || `${vendor} Collection`}
       </h2>
 
-      {/* Always show the grid with consistent height */}
-      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {/* Responsive layout: Horizontal scroll on mobile, grid on desktop */}
+      <div className="mt-8 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-4">
         {loading ? (
-          // Show skeleton items with exact same dimensions
+          // Show skeleton items
           Array.from({ length: limit }).map((_, index) => (
-            <ProductSkeleton key={`skeleton-${index}`} />
+            <div
+              key={`skeleton-${index}`}
+              className="w-[280px] flex-shrink-0 md:w-auto md:flex-shrink"
+            >
+              <ProductSkeleton />
+            </div>
           ))
         ) : products.length > 0 ? (
-          // Show actual products with same dimensions
+          // Show actual products
           products.map((p) => {
             const imageUrl = p.images.edges[0]?.node.url;
 
@@ -99,7 +104,7 @@ export default function ProductsByVendor({
               <Link
                 key={p.id}
                 href={`/product/${p.handle}`}
-                className="block min-h-[450px] rounded-sm"
+                className="block min-h-[450px] w-[280px] flex-shrink-0 rounded-sm md:w-auto md:flex-shrink"
               >
                 {imageUrl ? (
                   <Image
@@ -107,20 +112,19 @@ export default function ProductsByVendor({
                     alt={p.title}
                     width={400}
                     height={450}
-                    className="mb-2 h-[450px] w-full rounded object-cover"
-                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    className="mb-2 h-[350px] w-full rounded-sm object-cover md:h-[450px] md:rounded"
+                    sizes="(max-width: 768px) 280px, (max-width: 1024px) 50vw, 25vw"
                     loading="lazy"
-                    style={{ height: "auto" }}
                   />
                 ) : (
-                  <div className="mb-2 flex h-[450px] w-full items-center justify-center rounded bg-gray-200">
+                  <div className="mb-2 flex h-[350px] w-full items-center justify-center rounded-sm bg-gray-200 md:h-[450px] md:rounded">
                     <span className="text-sm text-gray-500">No Image</span>
                   </div>
                 )}
-                <div className="font-neue-montreal-mono mt-8 text-sm uppercase">
+                <div className="font-neue-montreal-mono mt-4 text-sm uppercase md:mt-8">
                   {p.title}
                 </div>
-                <div className="mt-4 line-clamp-3 text-sm text-gray-600">
+                <div className="mb-2 line-clamp-2 text-sm text-gray-600 md:mt-4 md:line-clamp-3">
                   {p.description}
                 </div>
                 <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
@@ -130,8 +134,8 @@ export default function ProductsByVendor({
             );
           })
         ) : (
-          // Error state with same height
-          <div className="col-span-full flex min-h-[450px] items-center justify-center py-4 text-center">
+          // Error state
+          <div className="col-span-full flex min-h-[450px] w-full items-center justify-center py-4 text-center">
             No {vendor} products found. Check console for details.
           </div>
         )}
