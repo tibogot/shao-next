@@ -1,311 +1,179 @@
-"use client";
+import React from "react";
+import Link from "next/link";
 
-import React, { useRef, useState, useEffect } from "react";
-import { gsap } from "gsap";
-import { Flip } from "gsap/Flip";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-// Register the plugins
-gsap.registerPlugin(Flip, ScrollTrigger);
-
-function AboutPage() {
-  const squareRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const initialParentRef = useRef<HTMLDivElement>(null);
-  const [isAnimated, setIsAnimated] = useState(false);
-
-  // ScrollTrigger Flip animation refs
-  const scrollSquareRef = useRef<HTMLDivElement>(null);
-  const scrollInitialRef = useRef<HTMLDivElement>(null);
-  const scrollTargetRef = useRef<HTMLDivElement>(null);
-  const scrollSectionRef = useRef<HTMLDivElement>(null);
-
-  // Simple ScrollTrigger scrub animation
-  useEffect(() => {
-    if (!scrollSquareRef.current || !scrollSectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Basic scrub animation - move, scale, and change color
-      gsap.to(scrollSquareRef.current, {
-        x: 400,
-        y: 150,
-        scale: 3,
-        rotation: 180,
-        backgroundColor: "#ff6b6b",
-        borderRadius: "50%",
-        scrollTrigger: {
-          trigger: scrollSectionRef.current,
-          start: "top center",
-          end: "bottom center",
-          scrub: 1,
-          markers: true,
-        },
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
-
-  const handleFlipAnimation = () => {
-    if (
-      !squareRef.current ||
-      !containerRef.current ||
-      !initialParentRef.current
-    )
-      return;
-
-    // Capture the current state
-    const state = Flip.getState(squareRef.current);
-
-    if (!isAnimated) {
-      // Move to container and resize
-      containerRef.current.appendChild(squareRef.current);
-      gsap.set(squareRef.current, {
-        width: "100%",
-        height: "100%",
-        top: 0,
-        left: 0,
-      });
-    } else {
-      // Move back to initial position
-      initialParentRef.current.appendChild(squareRef.current);
-      gsap.set(squareRef.current, {
-        width: "80px",
-        height: "80px",
-        top: 0,
-        left: 0,
-      });
-    }
-
-    // Animate from the previous state to the new state
-    Flip.from(state, {
-      duration: 1.2,
-      ease: "power2.inOut",
-      scale: true,
-      onComplete: () => {
-        setIsAnimated(!isAnimated);
-      },
-    });
-  };
-
+export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-blue-500 px-4 py-20 md:px-8">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="mb-8 text-4xl font-bold text-gray-900">
-          About - GSAP Flip Animation
-        </h1>
-
-        <div className="mb-8">
-          <button
-            onClick={handleFlipAnimation}
-            className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-colors duration-200 hover:bg-blue-700"
-          >
-            {isAnimated ? "Move Back" : "Flip to Container"}
-          </button>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-20 md:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-6xl">
+            About Us
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600 md:text-xl">
+            We're passionate about creating exceptional digital experiences that
+            connect people and transform businesses.
+          </p>
         </div>
+      </section>
 
-        {/* Animation area with proper overflow handling */}
-        <div className="relative min-h-96 overflow-visible">
-          <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
-            {/* Initial container for the square */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Initial Position
+      {/* Our Story Section */}
+      <section className="px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-4xl">
+          <div className="grid gap-12 md:grid-cols-2 md:items-center">
+            <div>
+              <h2 className="mb-6 text-3xl font-bold text-gray-900">
+                Our Story
               </h2>
-              <div
-                ref={initialParentRef}
-                className="relative h-32 w-32 overflow-visible border-2 border-gray-300 bg-gray-200"
-                style={{
-                  minHeight: "128px",
-                  minWidth: "128px",
-                }}
-              >
-                <div
-                  ref={squareRef}
-                  className="absolute top-0 left-0 bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg"
-                  style={{
-                    width: "80px",
-                    height: "80px",
-                    cursor: "pointer",
-                    zIndex: 100,
-                  }}
-                />
-              </div>
+              <p className="mb-4 text-gray-600">
+                Founded with a vision to bridge the gap between innovative
+                technology and meaningful user experiences, we've been dedicated
+                to crafting digital solutions that make a real difference.
+              </p>
+              <p className="mb-4 text-gray-600">
+                Our journey began with a simple belief: that great design and
+                cutting-edge technology should work together to solve real-world
+                problems and create value for businesses and their customers.
+              </p>
+              <p className="text-gray-600">
+                Today, we continue to push the boundaries of what's possible,
+                always keeping our users at the heart of everything we do.
+              </p>
             </div>
-
-            {/* Target container */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Target Container
-              </h2>
-              <div
-                ref={containerRef}
-                className="relative h-48 w-80 overflow-visible border-2 border-gray-300 bg-gray-200"
-                style={{
-                  minHeight: "192px",
-                  minWidth: "320px",
-                }}
-              />
+            <div className="rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 p-8">
+              <div className="text-center">
+                <div className="mb-4 text-4xl">🚀</div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-800">
+                  Innovation First
+                </h3>
+                <p className="text-gray-600">
+                  We embrace new technologies and methodologies to deliver
+                  cutting-edge solutions.
+                </p>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="mt-12 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <h3 className="mb-3 text-lg font-semibold text-gray-800">
-            How GSAP Flip Works:
-          </h3>
-          <ul className="space-y-2 text-gray-600">
-            <li>
-              • <strong>Flip.getState()</strong> captures the current position,
-              size, and transform of elements
-            </li>
-            <li>
-              • We then change the DOM (move element, change styles, etc.)
-            </li>
-            <li>
-              • <strong>Flip.from()</strong> animates from the captured state to
-              the new state
-            </li>
-            <li>
-              • The plugin automatically calculates the differences and creates
-              smooth transitions
-            </li>
-          </ul>
-        </div>
-
-        {/* ScrollTrigger + Flip Animation Section */}
-        <div ref={scrollSectionRef} className="mt-24 space-y-8">
-          <div className="space-y-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Exercise 2: ScrollTrigger + Flip Animation
+      {/* Values Section */}
+      <section className="bg-gray-50 px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+              Our Values
             </h2>
             <p className="text-lg text-gray-600">
-              Scroll to scrub through the Flip animation in real-time
+              The principles that guide everything we do
             </p>
-            <div className="inline-block rounded-full bg-orange-100 px-4 py-2 text-sm font-medium text-orange-800">
-              👇 Scroll slowly to see the scrub effect
-            </div>
           </div>
-
-          {/* Simple scroll animation area */}
-          <div className="relative min-h-96 overflow-visible">
-            <div className="space-y-8">
-              <div className="text-center">
-                <h3 className="mb-4 text-xl font-semibold text-gray-800">
-                  Watch the square transform as you scroll
-                </h3>
-                <div
-                  ref={scrollSquareRef}
-                  className="inline-block bg-gradient-to-br from-orange-500 to-red-600 shadow-lg"
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                  }}
-                />
-              </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="rounded-lg bg-white p-8 shadow-sm">
+              <div className="mb-4 text-3xl">💡</div>
+              <h3 className="mb-3 text-xl font-semibold text-gray-800">
+                Innovation
+              </h3>
+              <p className="text-gray-600">
+                We constantly explore new technologies and approaches to deliver
+                exceptional results that exceed expectations.
+              </p>
             </div>
-          </div>
-
-          <div className="mt-12 rounded-lg border border-orange-200 bg-orange-50 p-6 shadow-sm">
-            <h4 className="mb-3 text-lg font-semibold text-gray-800">
-              ScrollTrigger Scrub + Flip Combination:
-            </h4>
-            <ul className="space-y-2 text-gray-600">
-              <li>
-                • <strong>scrub: 1</strong> ties animation progress directly to
-                scroll position
-              </li>
-              <li>
-                • <strong>markers: true</strong> shows start/end trigger points
-                (green/red lines)
-              </li>
-              <li>
-                • <strong>onUpdate</strong> tracks scroll progress (0 to 1) in
-                real-time
-              </li>
-              <li>• Flip animation triggers at 50% scroll progress</li>
-              <li>• Timeline animates size/position smoothly with scroll</li>
-              <li>
-                • Perfect for interactive, scroll-based layout transitions
-              </li>
-            </ul>
+            <div className="rounded-lg bg-white p-8 shadow-sm">
+              <div className="mb-4 text-3xl">🤝</div>
+              <h3 className="mb-3 text-xl font-semibold text-gray-800">
+                Collaboration
+              </h3>
+              <p className="text-gray-600">
+                We believe in the power of teamwork and open communication to
+                achieve remarkable outcomes together.
+              </p>
+            </div>
+            <div className="rounded-lg bg-white p-8 shadow-sm">
+              <div className="mb-4 text-3xl">⚡</div>
+              <h3 className="mb-3 text-xl font-semibold text-gray-800">
+                Excellence
+              </h3>
+              <p className="text-gray-600">
+                We're committed to delivering the highest quality in every
+                project, paying attention to every detail.
+              </p>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Success Summary */}
-        <div className="mt-32 space-y-8">
-          <div className="space-y-6 text-center">
-            <h2 className="text-4xl font-bold text-gray-900">
-              🎉 GSAP Flip + ScrollTrigger Mastery Complete!
+      {/* Team Section */}
+      <section className="px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+              Meet Our Team
             </h2>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600">
-              We've successfully demonstrated two powerful GSAP Flip animation
-              patterns
+            <p className="text-lg text-gray-600">
+              The talented individuals behind our success
             </p>
           </div>
-
           <div className="grid gap-8 md:grid-cols-2">
-            <div className="rounded-xl border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 p-8 shadow-lg">
-              <h3 className="mb-4 text-2xl font-bold text-gray-800">
-                ✅ Exercise 1: Manual Flip
+            <div className="text-center">
+              <div className="mx-auto mb-4 h-32 w-32 rounded-full bg-gradient-to-br from-blue-400 to-purple-500"></div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-800">
+                Alex Johnson
               </h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-center">
-                  <span className="mr-3 text-green-500">🎯</span>
-                  Button-triggered Flip animation
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-green-500">🔄</span>
-                  Bidirectional transformation
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-green-500">📏</span>
-                  Size and position changes
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-green-500">✨</span>
-                  Smooth overflow handling
-                </li>
-              </ul>
+              <p className="mb-2 text-blue-600">Founder & CEO</p>
+              <p className="text-gray-600">
+                Passionate about creating digital experiences that make a
+                difference in people's lives.
+              </p>
             </div>
-
-            <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-8 shadow-lg">
-              <h3 className="mb-4 text-2xl font-bold text-gray-800">
-                ✅ Exercise 2: ScrollTrigger Scrub
+            <div className="text-center">
+              <div className="mx-auto mb-4 h-32 w-32 rounded-full bg-gradient-to-br from-green-400 to-blue-500"></div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-800">
+                Sarah Chen
               </h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-center">
-                  <span className="mr-3 text-blue-500">📜</span>
-                  Scroll-driven animation
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-blue-500">🎨</span>
-                  Color, scale, and position changes
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-blue-500">⚡</span>
-                  Perfect Lenis integration
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-blue-500">🔧</span>
-                  Smooth scrub animation
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="text-center">
-            <div className="inline-block rounded-full bg-gradient-to-r from-green-100 to-blue-100 px-8 py-4 text-lg font-medium text-gray-800">
-              🚀 Ready to build amazing Flip animations!
+              <p className="mb-2 text-blue-600">Head of Design</p>
+              <p className="text-gray-600">
+                Believes that great design is the perfect balance between beauty
+                and functionality.
+              </p>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Extra spacing for scroll testing */}
-        <div className="h-96"></div>
-      </div>
+      {/* Mission Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-16 text-white md:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-6 text-3xl font-bold">Our Mission</h2>
+          <p className="mx-auto max-w-2xl text-lg opacity-90">
+            To empower businesses and individuals through innovative digital
+            solutions that are beautiful, functional, and accessible to
+            everyone.
+          </p>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">
+            Ready to Work Together?
+          </h2>
+          <p className="mb-8 text-lg text-gray-600">
+            Let's create something amazing together. Get in touch with us today.
+          </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+            <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white shadow-lg transition-colors duration-200 hover:bg-blue-700">
+              Get In Touch
+            </button>
+            <Link
+              href="/flip-test2"
+              className="rounded-lg border border-gray-300 px-8 py-3 font-semibold text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+            >
+              View GSAP Demo
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
-
-export default AboutPage;

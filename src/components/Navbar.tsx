@@ -366,36 +366,6 @@ export default function Navbar() {
             ABOUT US
           </Link>
         </motion.div>
-        <motion.div
-          animate={{
-            color: isScrolled ? "#000000" : "#ffffff",
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          <Link
-            href="/flip-test"
-            className={`font-neue-montreal-mono cursor-pointer text-sm transition-colors ${
-              isScrolled ? "hover:text-black/60" : "hover:text-white/60"
-            }`}
-          >
-            FLIP-TEST
-          </Link>
-        </motion.div>
-        <motion.div
-          animate={{
-            color: isScrolled ? "#000000" : "#ffffff",
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          <Link
-            href="/demo"
-            className={`font-neue-montreal-mono cursor-pointer text-sm transition-colors ${
-              isScrolled ? "hover:text-black/60" : "hover:text-white/60"
-            }`}
-          >
-            DEMO
-          </Link>
-        </motion.div>
       </div>
 
       {/* Center - Logo with GSAP animation */}
@@ -578,20 +548,6 @@ export default function Navbar() {
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     ABOUT US
-                  </Link>
-                  <Link
-                    href="/flip-test"
-                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    FLIP-TEST
-                  </Link>
-                  <Link
-                    href="/demo"
-                    className="font-neue-montreal-mono block text-lg text-black transition-colors hover:text-black/60"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    DEMO
                   </Link>
                 </div>
 

@@ -9,7 +9,7 @@ export default function Footer() {
         {/* Main footer content */}
         <div className="flex flex-col gap-8 md:gap-12 lg:flex-row lg:justify-between">
           {/* Links Block - Left Side */}
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 md:gap-8">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
             {/* SHOP Section */}
             <div>
               <h3 className="font-neue-montreal-mono mb-4 text-xs font-medium tracking-wider text-black uppercase md:mb-6 md:text-sm">
@@ -124,6 +124,39 @@ export default function Footer() {
                     className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
                   >
                     info@shao.com
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* DEMOS Section */}
+            <div className="col-span-2 md:col-span-1">
+              <h3 className="font-neue-montreal-mono mb-4 text-xs font-medium tracking-wider text-black uppercase md:mb-6 md:text-sm">
+                DEMOS
+              </h3>
+              <ul className="space-y-2 md:space-y-1">
+                <li>
+                  <a
+                    href="/flip-test"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
+                  >
+                    Flip Test
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/flip-test2"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
+                  >
+                    Flip Test 2
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/demo"
+                    className="font-neue-montreal text-xs text-black/70 transition-colors hover:text-black md:text-sm"
+                  >
+                    Demo
                   </a>
                 </li>
               </ul>
