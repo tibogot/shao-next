@@ -8,6 +8,7 @@ import ProductsByVendor from "../components/HydrogenProducts";
 import FAQ from "@/components/FAQ";
 import Press from "@/components/Press";
 import RecentlyViewed from "../components/RecentlyViewed";
+import { CaretDownIcon } from "@phosphor-icons/react";
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,8 +43,9 @@ export default function Home() {
         />
 
         {/* Small text at bottom for LCP detection */}
-        <div className="absolute bottom-8 left-8 z-10 text-white">
-          <p className="font-neue-montreal text-sm">SHAO</p>
+        <div className="absolute bottom-8 z-10 mx-auto flex flex-col items-center text-white">
+          <p className="font-neue-montreal text-base">Scroll</p>
+          <CaretDownIcon size={24} weight="bold" />
         </div>
       </div>
       <section className="px-4 py-12 md:px-8 md:py-16">
