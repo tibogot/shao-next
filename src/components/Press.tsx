@@ -73,15 +73,16 @@ export default function Press() {
     index: number;
   }) => (
     <article className="w-[280px] flex-shrink-0 snap-start sm:w-[320px]">
-      <Image
-        src={article.src}
-        alt={article.alt}
-        width={400}
-        height={500}
-        className="mb-4 h-[400px] w-full rounded-sm object-cover sm:h-[450px]"
-        sizes="(max-width: 640px) 280px, (max-width: 768px) 320px"
-        loading="lazy"
-      />
+      <div className="relative mb-4 h-[320px] w-full overflow-hidden rounded-sm sm:h-[360px]">
+        <Image
+          src={article.src}
+          alt={article.alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 280px, (max-width: 768px) 320px"
+          loading="lazy"
+        />
+      </div>
       <h3 className="font-neue-montreal-mono text-lg uppercase">
         {article.title}
       </h3>
@@ -100,15 +101,16 @@ export default function Press() {
     index: number;
   }) => (
     <article className="block">
-      <Image
-        src={article.src}
-        alt={article.alt}
-        width={400}
-        height={500}
-        className="mb-4 h-[400px] w-full rounded-sm object-cover md:h-[450px] lg:h-[500px]"
-        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        loading="lazy"
-      />
+      <div className="relative mb-4 h-[280px] w-full overflow-hidden rounded-sm md:h-[320px] lg:h-[360px]">
+        <Image
+          src={article.src}
+          alt={article.alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          loading="lazy"
+        />
+      </div>
       <h3 className="font-neue-montreal-mono text-lg uppercase">
         {article.title}
       </h3>
@@ -195,7 +197,7 @@ export default function Press() {
       </div>
 
       {/* Desktop: Responsive grid that fills screen width */}
-      <div className="mt-8 hidden grid-cols-1 gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-8 hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {articles.map((article, index) => (
           <DesktopArticleCard key={index} article={article} index={index} />
         ))}

@@ -69,7 +69,7 @@ export default function LatestProducts() {
       </h2>
 
       {/* Responsive layout: Horizontal scroll on mobile, grid on desktop */}
-      <div className="scrollbar-hide mt-8 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-4">
+      <div className="scrollbar-hide mt-8 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-3 xl:grid-cols-4">
         {loading ? (
           // Show 4 skeleton items
           Array.from({ length: 4 }).map((_, index) => (
@@ -86,17 +86,18 @@ export default function LatestProducts() {
             <Link
               key={p.id}
               href={`/product/${p.handle}`}
-              className="block min-h-[450px] w-[280px] flex-shrink-0 md:w-auto md:flex-shrink"
+              className="block min-h-[380px] w-[280px] flex-shrink-0 sm:w-[320px] md:w-auto md:flex-shrink"
             >
-              <Image
-                src={p.images.edges[0]?.node.url}
-                alt={p.title}
-                width={400}
-                height={450}
-                className="mb-2 h-[350px] w-full rounded-sm object-cover md:h-[450px] md:rounded-none"
-                sizes="(max-width: 768px) 280px, (max-width: 1024px) 50vw, 25vw"
-                loading="lazy"
-              />
+              <div className="relative mb-2 h-[280px] w-full overflow-hidden rounded-sm sm:h-[300px] md:h-[320px] md:rounded-none">
+                <Image
+                  src={p.images.edges[0]?.node.url}
+                  alt={p.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 280px, (max-width: 1024px) 50vw, 25vw"
+                  loading="lazy"
+                />
+              </div>
               <div className="font-neue-montreal-mono mt-4 text-sm uppercase md:mt-8">
                 {p.title}
               </div>
