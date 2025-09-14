@@ -91,45 +91,48 @@ export default function ShopPage() {
         </p>
       </div>
 
-      {/* Loading State */}
-      {isLoading && (
-        <div className="mb-8 flex items-center justify-center py-8">
-          <div className="text-gray-500">Loading filters...</div>
-        </div>
-      )}
+      {/* Main Content Container - Always rendered with min-height to prevent layout shift */}
+      <div className="min-h-[800px]">
+        {/* Loading State */}
+        {isLoading && (
+          <div className="mb-8 flex items-center justify-center py-8">
+            <div className="text-gray-500">Loading filters...</div>
+          </div>
+        )}
 
-      {/* Advanced Search & Filtering */}
-      {!isLoading && (
-        <SearchAndFilter
-          onFiltersChange={handleFiltersChange}
-          categories={categories}
-          vendors={vendors}
-          maxPrice={maxPrice}
-        />
-      )}
+        {/* Advanced Search & Filtering */}
+        {!isLoading && (
+          <SearchAndFilter
+            onFiltersChange={handleFiltersChange}
+            categories={categories}
+            vendors={vendors}
+            maxPrice={maxPrice}
+          />
+        )}
 
-      {/* Products Grid with Enhanced Features */}
-      {!isLoading && (
-        <SmoothInfiniteScroll
-          search={filters.search}
-          minPrice={filters.priceRange[0].toString()}
-          maxPrice={filters.priceRange[1].toString()}
-          vendor={filters.vendor}
-          availability="all"
-          sortBy={filters.sortBy}
-          onQuickView={handleQuickView}
-        />
-      )}
+        {/* Products Grid with Enhanced Features */}
+        {!isLoading && (
+          <SmoothInfiniteScroll
+            search={filters.search}
+            minPrice={filters.priceRange[0].toString()}
+            maxPrice={filters.priceRange[1].toString()}
+            vendor={filters.vendor}
+            availability="all"
+            sortBy={filters.sortBy}
+            onQuickView={handleQuickView}
+          />
+        )}
 
-      {/* Loading Products */}
-      {isLoading && (
-        <div className="flex items-center justify-center py-16">
-          <div className="text-gray-500">Loading products...</div>
-        </div>
-      )}
+        {/* Loading Products - Enhanced skeleton */}
+        {isLoading && (
+          <div className="flex min-h-[600px] items-center justify-center py-16">
+            <div className="text-gray-500">Loading products...</div>
+          </div>
+        )}
 
-      {/* Recently Viewed Products */}
-      <RecentlyViewed isLoading={isLoading} />
+        {/* Recently Viewed Products */}
+        <RecentlyViewed isLoading={isLoading} />
+      </div>
 
       {/* Product Quick View Modal */}
       <ProductQuickView
