@@ -129,7 +129,7 @@ export default function ShopPage() {
       )}
 
       {/* Recently Viewed Products */}
-      <RecentlyViewed />
+      <RecentlyViewed isLoading={isLoading} />
 
       {/* Product Quick View Modal */}
       <ProductQuickView

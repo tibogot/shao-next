@@ -11,7 +11,13 @@ type Product = {
   price: number;
 };
 
-export default function RecentlyViewed() {
+interface RecentlyViewedProps {
+  isLoading?: boolean; // Loading state from parent component
+}
+
+export default function RecentlyViewed({
+  isLoading = false,
+}: RecentlyViewedProps) {
   const [recentProducts, setRecentProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -41,7 +47,8 @@ export default function RecentlyViewed() {
     (window as any).addToRecentlyViewed = addToRecentlyViewed;
   }, []);
 
-  if (recentProducts.length === 0) return null;
+  // Don't show recently viewed while main content is loading to prevent layout shift
+  if (isLoading || recentProducts.length === 0) return null;
 
   return (
     <section className="px-4 py-8 md:px-8">
@@ -82,5 +89,3 @@ export default function RecentlyViewed() {
     </section>
   );
 }
-
-
