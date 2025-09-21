@@ -31,9 +31,9 @@ function formatEuroPrice(amount: string) {
 // Skeleton component for consistent sizing
 function ProductSkeleton() {
   return (
-    <div className="block min-h-[450px] animate-pulse">
-      <div className="mb-2 h-[450px] w-full bg-gray-200"></div>
-      <div className="mt-8 mb-2 h-5 w-3/4 bg-gray-200"></div>
+    <div className="block min-h-[480px] animate-pulse">
+      <div className="mb-2 h-[380px] w-full bg-gray-200 sm:h-[400px] md:h-[420px]"></div>
+      <div className="mt-4 mb-2 h-5 w-3/4 bg-gray-200"></div>
       <div className="mb-2 h-4 w-full bg-gray-200"></div>
       <div className="h-4 w-1/2 bg-gray-200"></div>
     </div>
@@ -69,7 +69,7 @@ export default function LatestProducts() {
       </h2>
 
       {/* Responsive layout: Horizontal scroll on mobile, grid on desktop */}
-      <div className="scrollbar-hide mt-8 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="scrollbar-hide mt-4 grid grid-flow-col gap-4 overflow-x-auto pb-4 md:grid-flow-row md:grid-cols-2 md:overflow-visible md:pb-0 lg:grid-cols-3 xl:grid-cols-4">
         {loading ? (
           // Show 4 skeleton items
           Array.from({ length: 4 }).map((_, index) => (
@@ -86,9 +86,9 @@ export default function LatestProducts() {
             <Link
               key={p.id}
               href={`/product/${p.handle}`}
-              className="block min-h-[380px] w-[280px] flex-shrink-0 sm:w-[320px] md:w-auto md:flex-shrink"
+              className="block min-h-[480px] w-[280px] flex-shrink-0 sm:w-[320px] md:w-auto md:flex-shrink"
             >
-              <div className="relative mb-2 h-[280px] w-full overflow-hidden rounded-sm sm:h-[300px] md:h-[320px] md:rounded-none">
+              <div className="relative mb-2 h-[380px] w-full overflow-hidden rounded-sm sm:h-[400px] md:h-[420px] md:rounded-none">
                 <Image
                   src={p.images.edges[0]?.node.url}
                   alt={p.title}
@@ -98,10 +98,10 @@ export default function LatestProducts() {
                   loading="lazy"
                 />
               </div>
-              <div className="font-neue-montreal-mono mt-4 text-sm uppercase md:mt-8">
+              <div className="font-neue-montreal-mono mt-4 text-sm uppercase md:mt-4">
                 {p.title}
               </div>
-              <div className="mb-2 line-clamp-2 text-sm text-gray-600 md:mt-4 md:line-clamp-3">
+              <div className="mb-2 line-clamp-2 text-sm text-gray-600 md:line-clamp-3">
                 {p.description}
               </div>
               <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
@@ -111,7 +111,7 @@ export default function LatestProducts() {
           ))
         ) : (
           // Error state
-          <div className="col-span-full flex min-h-[450px] w-full items-center justify-center py-4 text-center">
+          <div className="col-span-full flex min-h-[480px] w-full items-center justify-center py-4 text-center">
             No products found. Check console for details.
           </div>
         )}

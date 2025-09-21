@@ -51,7 +51,7 @@ export default function RecentlyViewed({
   if (isLoading || recentProducts.length === 0) return null;
 
   return (
-    <section className="px-4 py-8 md:px-8">
+    <section className="py-8">
       <h2 className="font-neue-montreal-mono mb-6 text-sm text-black/60 uppercase">
         Recently Viewed
       </h2>

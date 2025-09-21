@@ -81,10 +81,10 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="mx-auto px-4 py-40 md:px-8">
+    <div className="mx-auto bg-[#F2F5F8] px-4 py-40 md:px-8">
       <div className="mb-8">
-        <h1 className="font-neue-montreal-mono mb-4 text-3xl uppercase">
-          Shop
+        <h1 className="font-neue-montreal-mono mb-2 text-xl uppercase">
+          Tous les produits
         </h1>
         <p className="text-gray-600">
           Discover our complete collection of sustainable beauty products

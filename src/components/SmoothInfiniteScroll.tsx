@@ -32,7 +32,7 @@ function ProductSkeleton({ delay = 0 }: { delay?: number }) {
   return (
     <div className="block min-h-[450px] animate-pulse rounded-sm">
       <div className="mb-2 h-[450px] w-full rounded bg-gray-200"></div>
-      <div className="mt-8 mb-2 h-5 w-3/4 rounded bg-gray-200"></div>
+      <div className="mt-4 mb-2 h-5 w-3/4 rounded bg-gray-200"></div>
       <div className="mb-2 h-4 w-full rounded bg-gray-200"></div>
       <div className="h-4 w-1/2 rounded bg-gray-200"></div>
     </div>
@@ -111,19 +111,21 @@ function ProductCard({
         className="block"
         onClick={handleProductView}
       >
-        <img
-          src={product.images.edges[0]?.node.url}
-          alt={product.title}
-          className="mb-2 h-[450px] w-full rounded object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
-        />
-        <div className="font-neue-montreal-mono mt-8 text-lg uppercase">
+        <div className="mb-2 h-[450px] w-full overflow-hidden rounded">
+          <img
+            src={product.images.edges[0]?.node.url}
+            alt={product.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        </div>
+        <div className="font-neue-montreal-mono mt-4 text-sm uppercase md:mt-4">
           {product.title}
         </div>
-        <div className="mt-4 line-clamp-3 text-lg text-gray-600">
+        <div className="mb-2 line-clamp-2 text-sm text-gray-600 md:line-clamp-3">
           {product.description}
         </div>
-        <div className="font-neue-montreal-mono mb-2 text-base text-gray-800 uppercase">
+        <div className="font-neue-montreal-mono mb-2 text-sm text-gray-800 uppercase">
           {formatEuroPrice(product.priceRange.minVariantPrice.amount)}
         </div>
       </Link>
